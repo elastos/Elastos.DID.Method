@@ -8,13 +8,13 @@
 
 亦来云Core团队
 
-2019年5月30日
+2019年11月30日
 
 
 
 **版本**
 
-0.1.draft
+0.2
 
 
 
@@ -82,14 +82,12 @@ DID相关的操作行为由DID主题持有者通过DID客户端发起交易来�
 下面是使用[RFC5234](https://tools.ietf.org/html/rfc5234)语法的亦来云DID描述符的ABNF定义：
 
 ```makefile
-did-reference      = did [ "/" did-path ] [ "#" did-fragment ] ;
-
 did                = "did:" method ":" specific-idstring ;
 method             = "elastos"
-
-specific-idstring  = idstring *( ":" idstring ) ;  # CHECKME: multipart or singlepart?
+specific-idstring  = idstring *( ":" idstring ) ;
 idstring           = BASE58 ;
 
+did-url            = did [ "/" did-path ] [ "#" did-fragment ] ;
 did-path           = path-rootless ;
 path-rootless      = segment-nz *( "/" segment ) ;
 segment            = *pchar ;
@@ -380,8 +378,28 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 
 
-#### 证据/Proof (无)
-亦来云DID文档中不包含`proof`属性。因为所有DID在ID侧链上的操作都有身份证明，保证了DID文档是由持有人更新，所以无需在文档中重复包含 `proof`属性。
+#### 证据/Proof 
+DID文档的Proof属性是用来对DID文档的完整性提供加密证明的信息。为了保证DID文档的可信以及完整性，Proof中需要包含针对改DID文档的签名，并且签名必须使用DID主题对应的密钥生成，从而保证文档的完整性，以及防止中间人攻击。Proof的规则是：
+
+- DID文档必须包含最多一个`proof`。
+- `type`默认是`ECDSAsecp256r1`，可以省略。
+- `created`表示签名创建时间，可以省略。
+- `creator`表示验证签名的密钥引用，值是必须是DID主题对应密钥的引用，可以省略。
+- `signatureValue`表示签名的值，使用Base64编码。
+
+例如：
+
+```json
+{
+  "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
+  ...
+  "proof": {
+    "type": "ECDSAsecp256r1",
+    "creator": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key",
+    "signatureValue": "QNB13Y7Q9...1tzjn4w"
+  }
+}
+```
 
 
 
@@ -390,7 +408,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 出于安全的考虑，亦来云DID主题具有有效期，最长有效期可以设定为5年，用户也可以根据自身需求设定为更短的有效期。超出有效期的DID主题则会被DID解析器识别为无效DID主题。 过期的规则是：
 
 - DID文档必须包含一个`expires`属性。
-- 此键的值必须是有效的[RFC3339](https://tools.ietf.org/html/rfc3339)组合日期和时间字符串的字符串值。
+- 此键的值必须是有效的[RFC3339](https://tools.ietf.org/html/rfc3339)组合日期和时间的字符串值。
 - 该日期时间值必须标准化为UTC时间，尾随“Z”。
 
 例如：
@@ -422,6 +440,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 - 必须包含一个`header`属性，该属性包含DID操作的基本信息。`header`的属性定义如下：
   - 必须包含一个`specification`属性，表示DID操作所符合的规范和版本，当前只支持`elastos/did/1.0`。
   - 必须包含一个`operation`属性，用来说明执行何种操作，属性值参见具体操作。
+  - 根据操作需要，可以包含一个`previousTxid`属性。属性定义参见具体操作。
 - 必须包含一个`payload`属性，属性值是操作的目标DID文档或者DID主题。
 - 必须包含一个`proof`属性，该属性包含DID持有者操作DID的公钥和签名，用于证明是持有者本人或者委推人的操作。`proof`属性定义如下：
   - `type`默认是`ECDSAsecp256r1`，可以省略。
@@ -492,6 +511,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 更新DID的规则是：
 
 - 必须包含一个`header`属性，其中 `operation`属性值是`update`，表示更新DID。
+- `header`需要包含`previousTxid` 属性，值是前一个DID文档操作的交易ID。用来避免不必要的错误更新操作。
 - 必须包含`payload`属性，值是新的DID文档。
 - 必须包含一个`proof`属性，包含DID所有者的公钥引用和签名，用于证明该操作是DID持有者发起。
 
@@ -501,7 +521,8 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 {
   "header": {
     "specification": "elastos/did/1.0",
-    "operation": "update"
+    "operation": "update",
+    "previousTxid": "3641de55f368583c...8917756a872093d2"
   },
   "payload": "ICAiZG9jIjogewogICAgImlkIjogImRpZDplbGFzdG9zOmljSjR6MkRVTHJIRXpZU3ZqS05KcEt5aHFGRHh2WVY3cE4iLAogICAgInB1YmxpY0tleSI6IFt7CiAgICAgICJpZCI6ICIjbWFzdGVyLWtleSIsCiAgICAgICJwdWJsaWNLZXlCYXNlNTgiOiAiek54b1phWkxkYWNrWlFOTWFzN3NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3anlZWGJ4Tm9wWFZ1ZnRCZSIKICAgIH0sIHsKICAgICAgImlkIjogIiNyZWNvdmVyeS1rZXkiLAogICAgICAiY29udHJvbGxlciI6ICJkaWQ6ZWxhc3RvczppcDdudERvMm1ldEduVTh3R1A0Rm55S0NVZGJIbTRCUERoIiwKICAgICAgInB1YmxpY0tleUJhc2U1OCI6ICJ6cHB5MzNpMnIzdUMxTFQzUkZjTHFKSlBGcFl1WlBEdUtNZUtaNVRkQXNrTSIKICAgIH1dLAogICAgImF1dGhlbnRpY2F0aW9uIjogWwogICAgICAibWFzdGVyLWtleXMiLAogICAgICAiI2tleS0yIiwKICAgIF0sCiAgICAuLi4KICB9LA",
   "proof": {

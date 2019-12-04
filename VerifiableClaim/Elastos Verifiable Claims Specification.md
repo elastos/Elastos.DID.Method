@@ -8,13 +8,13 @@
 
 亦来云Core团队
 
-2019年5月30日
+2019年11月30日
 
 
 
 **版本**
 
-0.1.draft
+0.2
 
 
 
@@ -89,15 +89,14 @@
 
 为了亦来云生态内dApps能够统一对类型的理解，本规范定义了以下几个基本的类型：
 
-| 类型名称                  | 说明                                                         |
-| ------------------------- | ------------------------------------------------------------ |
-| SelfProclaimedCredential  | DID持有人自主声明的凭证，没有第三方证明。                    |
-| ElastosIDteriaCredential  | 亦来云自助凭证服务颁发的凭证，经过了平台自助认证。           |
-| BasicProfileCredential    | 基本个人信息凭证，可包含姓名、昵称、性别、年龄、居住地、语言等信息。 |
-| InternetAccountCredential | 互联网服务账号凭证。仅支持Google / Microsoft / Facebook / Twitter / Wechat / QQ / Taobao / Alipay / Weibo，以及邮件地址。 |
-| PhoneCredential           | 电话号码凭证。                                               |
+| 类型名称                     | 说明                                                         |
+| ---------------------------- | ------------------------------------------------------------ |
+| SelfProclaimedCredential     | DID持有人自主声明的凭证，没有第三方证明。                    |
+| BasicProfileCredential       | 基本个人信息凭证，可包含姓名、昵称、性别、年龄、居住地、语言等信息。 |
+| ApplicationProfileCredential | 特定应用的基本个人信息凭证，具体信息和应用相关。             |
+| InternetAccountCredential    | 互联网服务账号凭证。仅支持Google / Microsoft / Facebook / Twitter / Wechat / QQ / Taobao / Alipay / Weibo，以及邮件地址。 |
 
-> TODO: 完善上述集合，可以实现在网络世界个人/机构实体的基本描述即可。不能覆盖的由应用去扩展。
+> 上述类型定义供应用参考，不能覆盖的由应用去扩展。
 
 例如一个自我声明的凭证片段：
 
@@ -168,32 +167,36 @@
 | 属性名称          | 说明                                                        |
 | ----------------- | ----------------------------------------------------------- |
 | name              | 名称。                                                      |
-| firstName         | 名字。                                                      |
-| lastName          | 姓氏。                                                      |
+| givenName         | 名字。可以和familyName一起使用替代name。                    |
+| familyName        | 姓氏。                                                      |
+| additionalName    | 中间名。                                                    |
 | nickname          | 昵称，绰号。                                                |
 | gender            | 性别。建议值：female，male，n/a。                           |
-| birthday          | 生日。                                                      |
-| avatar            | 头像。建议值是一个指向图片的URL，或者Base64编码的内嵌图片。 |
+| birthDate         | 出生日期。                                                  |
+| birthPlace        | 出生地。                                                    |
+| image             | 头像。建议值是一个指向图片的URL，或者Base64编码的内嵌图片。 |
+| description       | 描述说明。                                                  |
+| address           | 地址。                                                      |
 | email             | 邮件地址。                                                  |
-| phone             | 电话号码。                                                  |
-| fax               | 传真。                                                      |
+| telephone         | 电话号码。                                                  |
+| faxNumber         | 传真号码。                                                  |
 | city              | 居住城市。                                                  |
-| Address           | 地址。                                                      |
 | nation            | 国家。                                                      |
 | language          | 首选语言。                                                  |
-| homePage          | 实体的Web主页。                                             |
+| url               | 实体的Web主页。                                             |
 | im                | 即使消息的地址。                                            |
 | googleAccount     | Google账号。                                                |
 | MicrosoftPassport | 微软账号。                                                  |
 | facebook          | 脸书账号。                                                  |
 | twitter           | Twitter账号。                                               |
+| telegram          | Telegram账号。                                              |
 | weibo             | 微博账号。                                                  |
 | qq                | QQ账号。                                                    |
 | wechat            | 微信账号。                                                  |
 | taobao            | 淘宝账号。                                                  |
 | alipay            | 支付宝账号。                                                |
 
-> TODO: 完善这个列表，涵盖常用范围。
+> 上述属性定义参照[schema.org](https://schema.org/Person)定义，不能涵盖的属性，建议应用遵从[schema.org](https://schema.org/Person)进行扩展。
 
 
 
