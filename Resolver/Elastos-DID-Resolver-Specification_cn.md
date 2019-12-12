@@ -1,4 +1,4 @@
-# 亦来云DID解析接口规范
+# 亦来云DID解析接口规范 v0.2
 
 区块链驱动的智能万维网
 
@@ -105,12 +105,12 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 数值类型的状态码，指示目标DID解析的结果状态。该值为整数。值定义如下：
 
-| status | meaning                                                      |
-| ------ | ------------------------------------------------------------ |
-| 0      | DID文档有效。transaction成员包含请求的DID交易结果数组。      |
-| 1      | DID文档过期(expired)。transaction成员包含请求的DID交易结果数组。 |
+| status | meaning                                                                |
+| ------ | ---------------------------------------------------------------------- |
+| 0      | DID文档有效。transaction成员包含请求的DID交易结果数组。                |
+| 1      | DID文档过期(expired)。transaction成员包含请求的DID交易结果数组。       |
 | 2      | DID文档被撤销(deactivated)。transaction成员包含请求的DID交易结果数组。 |
-| 3      | DID不存在。结果对象不包含transaction成员。                   |
+| 3      | DID不存在。结果对象不包含transaction成员。                             |
 
 > DID 解析时，不论DID状态如何，只要正常执行了解析，都应该返回本对象，而不是返回error对象。通过不同的status值来表示不同的解析结果。比如DID不存在、过期、被撤销等状况，都属于正常，应该返回本对象。只有在Resolver服务不能正常执行解析行为时，才返回error对象，一般应该是JSON-RPC的错误，或者Resover自身的错误。
 
@@ -144,14 +144,14 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 按照[规范](https://www.jsonrpc.org/specification)定义，从-32768到-32000的错误代码（包括-32768至-32000）保留给预定义的错误。 此范围内未在下面明确定义的任何代码都保留供将来使用。 
 
-| code             | message          | meaning                                                      |
-| ---------------- | ---------------- | ------------------------------------------------------------ |
+| code             | message          | meaning                                                                                               |
+| ---------------- | ---------------- | ----------------------------------------------------------------------------------------------------- |
 | -32700           | Parse error      | Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text. |
-| -32600           | Invalid Request  | The JSON sent is not a valid Request object.                 |
-| -32601           | Method not found | The method does not exist / is not available.                |
-| -32602           | Invalid params   | Invalid method parameter(s).                                 |
-| -32603           | Internal error   | Internal JSON-RPC error.                                     |
-| -32000 to -32099 | Server error     | Reserved for implementation-defined server-errors.           |
+| -32600           | Invalid Request  | The JSON sent is not a valid Request object.                                                          |
+| -32601           | Method not found | The method does not exist / is not available.                                                         |
+| -32602           | Invalid params   | Invalid method parameter(s).                                                                          |
+| -32603           | Internal error   | Internal JSON-RPC error.                                                                              |
+| -32000 to -32099 | Server error     | Reserved for implementation-defined server-errors.                                                    |
 
 ### message
 
