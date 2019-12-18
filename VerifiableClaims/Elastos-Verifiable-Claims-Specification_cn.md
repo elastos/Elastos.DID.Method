@@ -207,7 +207,7 @@
 - `type`默认是`ECDSAsecp256r1`，可以省略。
 
 - `verificationMethod`表示证明方法，值是颁发者DID文档中用于签名和验证的公钥引用。
-- `signature`表示签名的值，使用Base64编码。
+- `signature`表示签名的值，使用Base64URL编码。
 
 
 
@@ -248,7 +248,7 @@
 - `verificationMethod`表示证明方法，值是提供者DID文档中用于签名和验证的公钥引用。
 - `nonce`表示签名操作使用的随机值。
 - `realm`表示该表达适用的目标领域，如网站域名，应用名等等。
-- `signature`表示签名的值，使用Base64编码。
+- `signature`表示签名的值，使用Base64URL编码。
 
 
 

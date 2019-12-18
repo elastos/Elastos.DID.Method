@@ -385,7 +385,7 @@ DID文档的Proof属性是用来对DID文档的完整性提供加密证明的信
 - `type`默认是`ECDSAsecp256r1`，可以省略。
 - `created`表示签名创建时间，可以省略。
 - `creator`表示验证签名的密钥引用，值是必须是DID主题对应密钥的引用，可以省略。
-- `signatureValue`表示签名的值，使用Base64编码。
+- `signatureValue`表示签名的值，使用Base64URL编码。
 
 例如：
 
@@ -445,7 +445,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 - 必须包含一个`proof`属性，该属性包含DID持有者操作DID的公钥和签名，用于证明是持有者本人或者委推人的操作。`proof`属性定义如下：
   - `type`默认是`ECDSAsecp256r1`，可以省略。
   - `verificationMethod`表示证明方法，值是颁发者DID文档中用于签名和验证的公钥引用。
-  - `signature`表示签名的值，使用Base64编码。
+  - `signature`表示签名的值，使用Base64URL编码。
 
 因为区块链是经济驱动的，交易需要手续费，并且payload也需要根据大小额外收费，所以从经济性的角度考虑，DID文档的要尽量紧凑，控制上链的大小，所以一般而言，上链的DID文档可以省略默认的属性，如公钥的`type`，和当前DID主题一致的`controller`，文档内属性引用的URI尽量减写等等，可以有效降低DID操作的费用。
 
