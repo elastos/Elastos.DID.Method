@@ -130,7 +130,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 - 每个公钥必须包含`id`和`type`属性。 公钥数组不应该包含具有相同`id`和具有不同格式的不同值属性的重复条目。
 - `id`属性值由该DID标识符和一个自定义的URI片段构成，如`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key`，出于保持数据紧凑的目的，可以省略前面的DID标识符，而仅使用URI片段部分，如`#master-key`。
-- 亦来云公钥的`type`默认是`ECDSAsecp256r1`，可以省略。
+- 亦来云公钥必须包含`type`，默认是`ECDSAsecp256r1`。
 - 每个公钥可以包含一个`controller`属性，用于表示相应私钥控制者的DID；默认为所在文档的DID，这种情况可省略该属性。
 - 每个公钥必须包含一个`publicKeyBase58` 属性，用来存放Base58编码的公钥。
 
