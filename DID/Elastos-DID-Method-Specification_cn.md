@@ -127,7 +127,6 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 - DID文档必须包含一个`publicKey`属性。
 - `publicKey`属性的值必须是公钥数组。
-
 - 每个公钥必须包含`id`和`type`属性。 公钥数组不应该包含具有相同`id`和具有不同格式的不同值属性的重复条目。
 - `id`属性值由该DID标识符和一个自定义的URI片段构成，如`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key`，出于保持数据紧凑的目的，可以省略前面的DID标识符，而仅使用URI片段部分，如`#master-key`。
 - 亦来云公钥必须包含`type`，默认是`ECDSAsecp256r1`。
@@ -164,10 +163,8 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 身份验证的规则是：
 
 - DID文档可以包含最多一个`authentication`属性。
-
 - `authentication`属性的值是一个验证方法数组，即可用于身份验证的公钥数组。
-
-- 可以嵌入或引用验证方法。 在引用时可以是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key`和`#master-key`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥/Public Keys)一致。
+- 可以嵌入或引用验证方法。 在引用时可以是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key`和`#master-key`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥public-keys)一致。
 
 例如：
 
@@ -201,7 +198,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 - DID文档可以包含最多一个`authorization`属性。
 - `authorization`属性的值应该是一个验证方法数组，即可用于委托的公钥数组。
-- 可以嵌入或引用每种验证方法。 在引用时可以是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#recovery-key`和`#recovery-key`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥/Public Keys)一致。
+- 可以嵌入或引用每种验证方法。 在引用时可以是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#recovery-key`和`#recovery-key`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥public-keys)一致。
 
 ```json
 {
@@ -298,13 +295,9 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 服务端点的规则是：
 
 - DID文档可以包含最多一个`service`属性。
-
 - `service`属性的值应该是服务端点的数组。
-
 - 每个服务端点必须包含`id` ， `type`和`serviceEndpoint`属性，并且可以包含其他应用自定义的属性。
-
 - 服务端点协议应该以开放标准规范发布。
-
 - `serviceEndpoint`属性的值必须是符合[RFC3986](https://tools.ietf.org/html/rfc3986)的有效URI，并根据[RFC3986第6节](https://tools.ietf.org/html/rfc3986#section-6)中的规则进行规范化。
 
 例如：
@@ -562,11 +555,8 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
 该DID文档中默认有一个公钥，即和DID主题对应的公钥；其它DID默认属性如下：
 
 - 公钥`#key`的`type`是`ECDSAsecp256r1`。
-
 - 公钥`#key`的`controller`是目标DID主题`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN`持有者。
-
 - 公钥`#key`可以用于认证DID主题持有者身份。
-
 - 有效期为5年。
 
 ### 一个复杂/冗长的DID文档
