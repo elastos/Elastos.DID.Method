@@ -1,24 +1,25 @@
-# 亦来云DID解析接口规范 v0.2
+# Elastos DID Resolver Specification v0.2
 
-区块链驱动的智能万维网
+Smart Web Powered by Blockchain
 
 ----
 
-亦来云基金会
+Elastos Foundation
 
-2019年11月30日
+30 November 2019
 
-**版本**
+**Version**
 
 0.2
 
-**内容说明**
+**Description of Contents**
 
-此文档是亦来云DID解析接口规范，由亦来云基金会发布并维护。主要说明了亦来云DID解析的接口定义，以及相关的请求和响应数据定义。未来我们会持续升级此文档，以体现亦来云DID技术最新发展状态。
+This document is the Elastos DID Resolver specification, which is published and maintained by the Elastos Foundation. It mainly explains the definition of the Elastos DID Resolver, as well as the definition of related requests and response data. In the future, we will continue to upgrade this document so that it reflects the latest state of development of the Elastos DID technology.
 
-**版权声明**
 
-此文档著作权归亦来云基金会所有，保留所有权利。
+**Copyright Declaration**
+
+The copyright of this document belong to the Elastos Foundation. All rights reserved.
 
 ----
 
@@ -26,98 +27,103 @@
 
 ----
 
-## 概述
+## Abstract
 
-Elastos采用[JSON-RPC](https://www.jsonrpc.org/specification)接口提供DID解析方法。关于[JSON-RPC](https://www.jsonrpc.org/specification)的具体细节，可以参考官网规范。
+Elastos uses the [JSON-RPC](https://www.jsonrpc.org/specification) interface to provide the DID resolve method. For more details about [JSON-RPC](https://www.jsonrpc.org/specification), please see specifications on the official website.
+
 
 ## Resolve Request
 
 ### method
 
-字符串值，其中包含要调用的方法的名称。对DID Resolve请求，值为"resolvedid"。
+The string value contains the name of the method to be invoked. For the DID Resolve request, the value is "resolvedid".
 
 ### params
 
-对象值，包含在resolvedid方法调用中需要使用的参数。参数定义如下：
+The object value, which is the parameter to be included in the call of `resolvedid`  method. The parameters are defined as follows:
 
 - did
 
-  DID字符串。可以是完整的DID字符串如：*did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4*，或者仅method specific string如：*iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4*。
+  DID string. Can be a complete DID string, such as *did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4*, or just a method specific string, such as: *iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4*.
+
 
 - all
 
-  是否获取该DID的所有历史操作。Boolean类型，true或者false。
+  Whether or not all operation history of this DID are obtained. Boolean, true or false.
+
 
 ### id
 
-客户端设定的请求标识符，必须包含字符串，数字或NULL值（如果包含）。 值通常不应为null，并且数字不应包含小数部分。
+The request identifier set by the client must include a string, numerical or null value (if contained). The value usually should not be null, and the numerals should not include decimals.
+
 
 ## Resolve Response
 
 ### jsonrpc
 
-JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 必须为“ 2.0”。
+The JSON-RPC default response property, a string value, indicates the JSON-RPC protocol version. Must be "2.0."
 
 ### result
 
-如果Resolve执行成功，则包含此成员，值为resolve的结果对象。如果调用resolve时出错，则该成员不存在或者为null。DID Resolver解析结果对象的定义参考[Resolve result object](#resolve-result-object)。
+If Resolve is executed successfully, then this member is included, and the value is the result object of resolve. If an error occurs when resolve is invoked, then this member does not exist or is null. See [Resolve Result Object](#resolve-result-object) for the definition of the DID Resolver’s resolve result object.
+
 
 ### error
 
-如果Resolve执行正常，则该成员不存在或者为null。如果Resolve执行错误，那么包含该成员，值为错误信息对象。错误信息对象的定义参考[Error object](#error-object)。
+If Resolve executes normally, then this member does not exist or is null. If there is an error in the execution of Resolve, this member is included, the value is an error object. See [Error Object](#error-object) for the definition of error objects.
 
 ### id
 
-此成员是必需的。它必须与请求对象中id成员的值相同。如果在请求对象中检查ID时发生错误（例如解析错误/无效请求），则该值必须为null。
+This member is necessary. It must be identical to the value of the id member in the request object. If an error occurs at the time of ID inspection in the request object (for example resolve error/invalid request), then this value must be null.
 
 ## Resolve Result Object
 
-当DID Resolve成功执行时，response中必须包含result成员，其值是具有以下成员的对象：
+When the DID Resolve executes successfully, the response must contain a result member whose value is an object containing the following members:
 
 ### did
 
-请求的目标DID。
+The request's target DID.
 
 ### status
 
-数值类型的状态码，指示目标DID解析的结果状态。该值为整数。值定义如下：
+The numerical value type status code indicates the result status of resolving target DID. This value is an integer. The value is defined as the following:
 
-| status | meaning                                                                |
-| ------ | ---------------------------------------------------------------------- |
-| 0      | DID文档有效。transaction成员包含请求的DID交易结果数组。                |
-| 1      | DID文档过期(expired)。transaction成员包含请求的DID交易结果数组。       |
-| 2      | DID文档被撤销(deactivated)。transaction成员包含请求的DID交易结果数组。 |
-| 3      | DID不存在。结果对象不包含transaction成员。                             |
+| status | meaning                                                                                                               |
+| ------ | --------------------------------------------------------------------------------------------------------------------- |
+| 0      | DID document is valid. Transaction member contains an array which is  the result of requesting DID transaction.       |
+| 1      | DID document is expired. Transaction member contains an array which is  the result of requesting DID transaction.     |
+| 2      | DID document is deactivated. Transaction member contains an array which is  the result of requesting DID transaction. |
+| 3      | DID does not exist. The result object does not contain the transaction member.                                        |
 
-> DID 解析时，不论DID状态如何，只要正常执行了解析，都应该返回本对象，而不是返回error对象。通过不同的status值来表示不同的解析结果。比如DID不存在、过期、被撤销等状况，都属于正常，应该返回本对象。只有在Resolver服务不能正常执行解析行为时，才返回error对象，一般应该是JSON-RPC的错误，或者Resover自身的错误。
+> When resolving a DID, regardless of the DID status, it should return this object, and should not return the error object, as long as the resolve is executed normally. Different resolve results are expressed though different status values. For example, statuses such as DID does not exists, is expired, or is deactivated, are all normal, and should return this object. It will only return the error object when the Resolver service cannot execute resolve actions, and in general is a JSON-RPC error or a Resolver error itself.
 
 ### transaction
 
-数组对象，元素为被请求目标DID的ID交易及操作信息。元素是包含以下成员的对象：
+An array object, and the elements are the ID transaction and operation information of the target DID being requested. The element is an object containing the following members:
 
 - **txid**
 
-  字符串成员，为当前ID交易的transaction id。
+  The string member which is the current ID transaction's transaction id.
 
 - **timestamp**
 
-  交易时间，值必须是有效的[RFC3339](https://tools.ietf.org/html/rfc3339)组合日期和时间的字符串值，同时必须标准化为UTC时间，尾随“Z”。
+  For the transaction time, whose value must be a valid string value conforming to [RFC3339](https://tools.ietf.org/html/rfc3339) combining the date and time, and must also be normalized to UTC time, followed in "Z."
 
 - **operation**
 
-  对象成员，为当前ID交易的payload，即DID操作的JSON对象。
+  The object member, which is the payload of the current ID transaction, that is, the JSON object of the DID operation.
 
-当[resolve did请求的参数](#params)`all`为*false*时，transaction数组对象仅包含目标ID的最后一个交易的信息。当`all`为*true*时，transaction数组对象包含目标DID的所有交易信息，数组元素按照ID交易的时间降序存放，即第0个为最新ID交易。
+When`all` in [the parameters of Resolve DID request](#params) is *false*, the transaction array object only contains information from the target ID's last transaction. When `all` is *true*, the transaction array object contains all transaction information of the target DID, and the array elements are stored in descending order according to ID’s transaction time, meaning that no. #0 is the newest ID transaction.
 
 ## Error object
 
-当Resolve调用遇到错误时，response中必须包含error成员，其值是具有以下成员的对象：
+When the Resolve encounters an error, an error member must be contained in the response, whose value is an object containing the following members:
 
 ### code
 
-数值类型的错误代码，指示发生的错误类型。该值为整数。
+The numerical type error code indicating the error type occurred. This value is an integer.
 
-按照[规范](https://www.jsonrpc.org/specification)定义，从-32768到-32000的错误代码（包括-32768至-32000）保留给预定义的错误。 此范围内未在下面明确定义的任何代码都保留供将来使用。
+According to the definition in [specification](https://www.jsonrpc.org/specification), error codes from -32768 to -32000 (including -32768 to -32000) are reserved for predefined errors. Any code within this scope that has not been specifically defined below is reserved for future use. 
 
 | code             | message          | meaning                                                                                               |
 | ---------------- | ---------------- | ----------------------------------------------------------------------------------------------------- |
@@ -130,15 +136,15 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ### message
 
-对错误进行简短描述的字符串。一般是一个简洁的句子。
+A string briefly describing the error. Generally, a concise sentence.
 
 ### data
 
-可选成员，包含有关错误的其他信息。值由Resolver服务器定义（例如，详细的错误信息，嵌套的错误等）。
+Member optional, contains other information related to the error. The value is defined by the Resolver server (for example, detailed error information, nested errors, etc.).
 
-## 示例
+## Examples
 
-### 解析DID文档，并且文档有效
+### Resolve the DID document, and the document is valid
 
 #### Request
 
@@ -183,7 +189,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 }
 ```
 
-### 解析DID文档，文档过期
+### Resolve the DID document, the document is expired
 
 #### Request
 
@@ -228,7 +234,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 }
 ```
 
-### 解析DID文档，DID被撤销
+### Resolve the DID document, the DID has been deactivated
 
 #### Request
 
@@ -271,7 +277,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 }
 ```
 
-### 解析DID文档，DID不存在
+### Resolve the DID document, the DID does not exist
 
 #### Request
 
@@ -299,7 +305,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 }
 ```
 
-### 解析DID所有操作记录
+### Resolve all DID operation records
 
 #### Request
 
@@ -375,7 +381,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 }
 ```
 
-### 解析DID错误
+### Resolve the DID error
 
 #### Request
 
