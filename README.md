@@ -12,11 +12,11 @@ DID is completely under the control of the DID subject, without reliance on any 
 
 ## Specifications
 
-| Sspecification    | Link                                                                                                |
-| ----------------- | --------------------------------------------------------------------------------------------------- |
-| Method            | [EN](/DID/Elastos-DID-Method-Specification_en.md) [CN](/DID/Elastos-DID-Method-Specification_cn.md) |
-| Resolve           | [CN](/Resolver/Elastos-DID-Resolver-Specification_cn.md)                                            |
-| Verifiable Claims | [CN](/VerifiableClaims/Elastos-Verifiable-Claims-Specification_cn.md)                               |
+| Sspecification    | Link                                                                                                                                        |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Method            | [EN](/DID/Elastos-DID-Method-Specification_en.md) [CN](/DID/Elastos-DID-Method-Specification_cn.md)                                         |
+| Resolve           | [EN](/Resolver/Elastos-DID-Resolver-Specification_en.md) [CN](/Resolver/Elastos-DID-Resolver-Specification_cn.md)                           |
+| Verifiable Claims | [EN](/VerifiableClaims/Elastos-Verifiable-Claims-Specification_en.md) [CN](/VerifiableClaims/Elastos-Verifiable-Claims-Specification_cn.md) |
 
 ## DID SDK
 
