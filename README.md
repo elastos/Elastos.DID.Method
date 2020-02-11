@@ -20,6 +20,7 @@ DID is completely under the control of the DID subject, without reliance on any 
 
 ## DID SDK
 
-| Language | Link                                                                    |
-| -------- | ----------------------------------------------------------------------- |
-| Java     | [Elastos.DID.Java.SDK](https://github.com/elastos/Elastos.DID.Java.SDK) |
+| Language | Link                                                                      |
+| -------- | ------------------------------------------------------------------------- |
+| Java     | [Elastos.DID.Java.SDK](https://github.com/elastos/Elastos.DID.Java.SDK)   |
+| Swift    | [Elastos.DID.Swift.SDK](https://github.com/elastos/Elastos.DID.Swift.SDK) |
