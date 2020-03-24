@@ -398,17 +398,27 @@ DID Query是用来对ID侧链上的DID文档进行查询的方法，查询的数
 
 - service
 
-  可选，表示 service type 的字符串。关于service type，参见亦来云 DID 方法规范中 service 的定义。支持多个类型的或 "|" 以及与 "&", 比如："type1 | type2", "type1 & type2"。
+  可选，表示 service type 的字符串。关于service type，参见亦来云 DID 方法规范中 service 的定义。仅支持单一类型查询。
 
 - credential
 
-  可选，表示 credential type 的字符串。关于credential type，参见亦来云可验证声明规范中凭证类型定义。支持多个类型的或 "|" 以及与 "&", 比如："type1 | type2", "type1 & type2"。
+  可选，表示 credential type 的字符串。关于credential type，参见亦来云可验证声明规范中凭证类型定义。仅支持单一类型查询。
 
 - query
 
-  可选，采用 MongoDB 语法的查询条件。
+  可选，采用 MongoDB 语法的查询条件，仅支持MongoDB的find方法的条件语法。
+  
+- skip
 
-上述三个参数虽然都可选，但同时只能支持一个，并且必须有一个。
+  可选，跳过查询结果的文档数量。
+
+- limit
+
+  可选，指定查询结果返回的文档数量。
+
+上述三个条件参数`service`、`credential`和`query`虽然都可选，但同时只能支持一个，并且必须有一个。
+
+`skip`和`limit`参数用来提供分页支持，用了控制当前返回查询结果的子集。
 
 #### id
 
@@ -434,11 +444,27 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ### Query Result Object
 
-当DID Query成功执行时，response中必须包含result成员，其值是符合查询条件的DID数组。如果没有符合条件的DID，那么返回一个空数组。
+当DID Query成功执行时，response中必须包含result成员，其值是具有以下成员的对象：
+
+#### count
+
+符合查询条件的DID文档总数。
+
+#### skip
+
+跳过查询结果的文档数量。
+
+#### limit
+
+查询结果返回的文档数量。
+
+#### document
+
+数组对象，元素为符合条件的DID Document。如果没有符合条件的文档，那么返回一个空数组。
 
 ### 示例
 
-#### 查询包含特定服务的DID
+#### 查询包含特定服务的DID的第三页，每页10个文档
 
 ##### Request
 
@@ -446,7 +472,9 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 {
     "method": "query",
     "params":{
-        "service": "CredentialRepositoryService & CarrierService",
+        "service": "CredentialRepositoryService",
+        "skip": 20,
+        "limit": 10
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
@@ -458,12 +486,68 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
-  "result": [
-    "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
-    "did:elastos:ipS25ivgyTsiedJtuXJ2EmKWAFFNZXrqJn",
-    ...
-    "did:elastos:ikGEhW6JiY5Nkdd39D1aohjYKNjFJZCdnb"
-  ]
+  "result": {
+    "count": 1234,
+    "skip": 20,
+    "limit": 10,
+    "document": [{
+      "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+      "publicKey":[
+        {
+          "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+          "publicKeyBase58":"29sd8BAPMWcTvDxT2igvQ86rbd8WYboYbmt3szo1zszdB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+        "signatureValue":"DNBIrcX9...Dz0j5q1g"
+      }
+    }, {
+      "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+      "publicKey":[
+        {
+          "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+          "publicKeyBase58":"22z1jcrBqX75yRBUNgDHkWmPs1SGe57gkHYA7UCij6Nge"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+        "signatureValue":"vJH4s1KH...LWSU-8MA"
+      }
+    }, 
+    ......
+    {
+      "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+      "publicKey":[
+        {
+          "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+          "publicKeyBase58":"26aiYAHBGGKvHWneoaLfgJNKihfGjhHsva1YLBT89WvFB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+        "signatureValue":"4yoSU799...zv5euakA"
+      }
+    }]
+  }
 }
 ```
 
@@ -475,7 +559,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 {
     "method": "query",
     "params":{
-        "credential": "TrinityCredential | EmailCredential",
+        "credential": "TrinityCredential"
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
@@ -487,31 +571,95 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
-  "result": [
-    "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
-    "did:elastos:ipS25ivgyTsiedJtuXJ2EmKWAFFNZXrqJn",
-    ...
-    "did:elastos:ikGEhW6JiY5Nkdd39D1aohjYKNjFJZCdnb"
-  ]
+  "result": {
+    "count": 1234,
+    "skip": 0,
+    "limit": 0,
+    "document": [{
+      "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+      "publicKey":[
+        {
+          "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+          "publicKeyBase58":"29sd8BAPMWcTvDxT2igvQ86rbd8WYboYbmt3szo1zszdB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+        "signatureValue":"DNBIrcX9...Dz0j5q1g"
+      }
+    }, {
+      "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+      "publicKey":[
+        {
+          "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+          "publicKeyBase58":"22z1jcrBqX75yRBUNgDHkWmPs1SGe57gkHYA7UCij6Nge"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+        "signatureValue":"vJH4s1KH...LWSU-8MA"
+      }
+    }, 
+    ......
+    {
+      "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+      "publicKey":[
+        {
+          "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+          "publicKeyBase58":"26aiYAHBGGKvHWneoaLfgJNKihfGjhHsva1YLBT89WvFB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+        "signatureValue":"4yoSU799...zv5euakA"
+      }
+    }]
+  }
 }
 ```
 
 #### 自定义查询
 
+##### MongoDB's find condition
+
+```json
+{
+    "credential": {
+        "type": ["SelfProclaimedCredential"],
+        "subject": {
+            "email": { $exists: true }
+        }
+    }
+}
+```
+
 ##### Request
 
 ```json
 {
-    "method": "query",
+  	"method": "query",
     "params":{
-        "query": {
-            "credential": {
-                "type": ["SelfProclaimedCredential"],
-                "subject": {
-                    "email": { $exists: true }
-                }
-            }
-        }
+      	"query": "{\"credential\":{\"type\":[\"SelfProclaimedCredential\"],\"subject\":{\"email\":{$exists:true}}}}",
+        "skip": 10,
+        "limit": 10
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
@@ -523,12 +671,68 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
-  "result": [
-    "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
-    "did:elastos:ipS25ivgyTsiedJtuXJ2EmKWAFFNZXrqJn",
-    ...
-    "did:elastos:ikGEhW6JiY5Nkdd39D1aohjYKNjFJZCdnb"
-  ]
+  "result": {
+    "count": 1234,
+    "skip": 10,
+    "limit": 10,
+    "document": [{
+      "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+      "publicKey":[
+        {
+          "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+          "publicKeyBase58":"29sd8BAPMWcTvDxT2igvQ86rbd8WYboYbmt3szo1zszdB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+        "signatureValue":"DNBIrcX9...Dz0j5q1g"
+      }
+    }, {
+      "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+      "publicKey":[
+        {
+          "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+          "publicKeyBase58":"22z1jcrBqX75yRBUNgDHkWmPs1SGe57gkHYA7UCij6Nge"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+        "signatureValue":"vJH4s1KH...LWSU-8MA"
+      }
+    }, 
+    ......
+    {
+      "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+      "publicKey":[
+        {
+          "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+          "publicKeyBase58":"26aiYAHBGGKvHWneoaLfgJNKihfGjhHsva1YLBT89WvFB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+        "signatureValue":"4yoSU799...zv5euakA"
+      }
+    }]
+  }
 }
 ```
 
@@ -540,14 +744,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 {
     "method": "query",
     "params":{
-        "query": {
-            "credential": {
-                "type": ["InternetCrdential"],
-                "subject": {
-                    "email": { $exists: true }
-                }
-            }
-        }
+        "query": "{\"credential\":{\"type\":[\"InternetCredential\"],\"subject\":{\"email\":{$exists:true}}}}"
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
@@ -559,7 +756,12 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
-  "result": []
+  "result": {
+    "count": 0,
+    "skip": 0,
+    "limit": 0,
+    "document": []
+  }
 }
 ```
 
@@ -571,15 +773,8 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 {
     "method": "query",
     "params":{
-        "service" : "carrier",
-        "query": {
-            "credential": {
-                "type": ["InternetCrdential"],
-                "subject": {
-                    "email": { $exists: true }
-                }
-            }
-        }
+        "service": "carrier",
+        "query": "{\"credential\":{\"type\":[\"SelfProclaimedCredential\"],\"subject\":{\"email\":{$exists:true}}}}"
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }

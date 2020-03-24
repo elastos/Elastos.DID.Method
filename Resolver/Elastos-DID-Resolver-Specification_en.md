@@ -400,17 +400,27 @@ The object value, which is the parameter to be included in the call of  `query` 
 
 - service
 
-  Optional, a string representing the service type. For service type, see the definition of service in the Elastos DID method specification. Support multiple types or "|", and "&", such as: "type1 | type2", "type1 & type2".
+  Optional, a string representing the service type. For service type, see the definition of service in the Elastos DID method specification. Only supports a single type of query.
 
 - credential
 
-  Optional, a string representing the credential type. For credential type, see the definition of credential in the Elastos Verifiable Claims Specification. Support multiple types or "|", and "&", such as: "type1 | type2", "type1 & type2".
+  Optional, a string representing the credential type. For credential type, see the definition of credential in the Elastos Verifiable Claims Specification. Only supports a single type of query.
 
 - query
 
-  Optional, query conditions in MongoDB query syntax.
+  Optional, query conditions in MongoDB query syntax, only  supportes the conditional syntax of MongoDB's find method
 
-Although all the above three parameters are optional, they can only support one and must have one.
+- skip
+
+  Optional, the number of documents to skip in the results set.
+
+- limit
+
+  Optional, the number of documents returned in the result set.
+
+Although all the above three parameters  `service`, `credential` and `query` are optional, they can only support one and must have one.
+
+The `skip` and `limit` parameters are used to provide paging support, which controls the subset of the query results should return.
 
 #### id
 
@@ -436,11 +446,27 @@ This member is necessary. It must be identical to the value of the id member in 
 
 ### Query Result Object
 
-When the DID Query executes successfully , the response must contain the result member, whose value is an array of DIDs that meet the query conditions. If there are no matching DIDs, an empty array is returned.
+When the DID Query executes successfully, the response must contain a result member whose value is an object containing the following members:
+
+#### count
+
+The total unmber of document  that meet the query conditions.
+
+#### skip
+
+The number of documents to skip in the results set.
+
+#### limit
+
+The number of documents returned in the result set.
+
+#### document
+
+An array object, and the elements are the DID document that meet the query conditions. If there are no matching DIDs, an empty array is returned.
 
 ### Examples
 
-#### Querying DIDs containing specific service
+#### Querying DIDs containing specific service, return the 3rd page, 10 documents per page
 
 ##### Request
 
@@ -448,7 +474,9 @@ When the DID Query executes successfully , the response must contain the result 
 {
     "method": "query",
     "params":{
-        "service": "CredentialRepositoryService & CarrierService",
+        "service": "CredentialRepositoryService",
+        "skip": 20,
+        "limit": 10
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
@@ -460,12 +488,68 @@ When the DID Query executes successfully , the response must contain the result 
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
-  "result": [
-    "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
-    "did:elastos:ipS25ivgyTsiedJtuXJ2EmKWAFFNZXrqJn",
-    ...
-    "did:elastos:ikGEhW6JiY5Nkdd39D1aohjYKNjFJZCdnb"
-  ]
+  "result": {
+    "count": 1234,
+    "skip": 20,
+    "limit": 10,
+    "document": [{
+      "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+      "publicKey":[
+        {
+          "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+          "publicKeyBase58":"29sd8BAPMWcTvDxT2igvQ86rbd8WYboYbmt3szo1zszdB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+        "signatureValue":"DNBIrcX9...Dz0j5q1g"
+      }
+    }, {
+      "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+      "publicKey":[
+        {
+          "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+          "publicKeyBase58":"22z1jcrBqX75yRBUNgDHkWmPs1SGe57gkHYA7UCij6Nge"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+        "signatureValue":"vJH4s1KH...LWSU-8MA"
+      }
+    }, 
+    ......
+    {
+      "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+      "publicKey":[
+        {
+          "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+          "publicKeyBase58":"26aiYAHBGGKvHWneoaLfgJNKihfGjhHsva1YLBT89WvFB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+        "signatureValue":"4yoSU799...zv5euakA"
+      }
+    }]
+  }
 }
 ```
 
@@ -477,7 +561,7 @@ When the DID Query executes successfully , the response must contain the result 
 {
     "method": "query",
     "params":{
-        "credential": "TrinityCredential | EmailCredential",
+        "credential": "TrinityCredential"
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
@@ -489,31 +573,95 @@ When the DID Query executes successfully , the response must contain the result 
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
-  "result": [
-    "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
-    "did:elastos:ipS25ivgyTsiedJtuXJ2EmKWAFFNZXrqJn",
-    ...
-    "did:elastos:ikGEhW6JiY5Nkdd39D1aohjYKNjFJZCdnb"
-  ]
+  "result": {
+    "count": 1234,
+    "skip": 0,
+    "limit": 0,
+    "document": [{
+      "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+      "publicKey":[
+        {
+          "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+          "publicKeyBase58":"29sd8BAPMWcTvDxT2igvQ86rbd8WYboYbmt3szo1zszdB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+        "signatureValue":"DNBIrcX9...Dz0j5q1g"
+      }
+    }, {
+      "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+      "publicKey":[
+        {
+          "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+          "publicKeyBase58":"22z1jcrBqX75yRBUNgDHkWmPs1SGe57gkHYA7UCij6Nge"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+        "signatureValue":"vJH4s1KH...LWSU-8MA"
+      }
+    }, 
+    ......
+    {
+      "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+      "publicKey":[
+        {
+          "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+          "publicKeyBase58":"26aiYAHBGGKvHWneoaLfgJNKihfGjhHsva1YLBT89WvFB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+        "signatureValue":"4yoSU799...zv5euakA"
+      }
+    }]
+  }
 }
 ```
 
 #### Customized query
 
+##### MongoDB's find condition
+
+```json
+{
+    "credential": {
+        "type": ["SelfProclaimedCredential"],
+        "subject": {
+            "email": { $exists: true }
+        }
+    }
+}
+```
+
 ##### Request
 
 ```json
 {
-    "method": "query",
+  	"method": "query",
     "params":{
-        "query": {
-            "credential": {
-                "type": ["SelfProclaimedCredential"],
-                "subject": {
-                    "email": { $exists: true }
-                }
-            }
-        }
+      	"query": "{\"credential\":{\"type\":[\"SelfProclaimedCredential\"],\"subject\":{\"email\":{$exists:true}}}}",
+        "skip": 10,
+        "limit": 10
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
@@ -525,14 +673,72 @@ When the DID Query executes successfully , the response must contain the result 
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
-  "result": [
-    "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
-    "did:elastos:ipS25ivgyTsiedJtuXJ2EmKWAFFNZXrqJn",
-    ...
-    "did:elastos:ikGEhW6JiY5Nkdd39D1aohjYKNjFJZCdnb"
-  ]
+  "result": {
+    "count": 1234,
+    "skip": 10,
+    "limit": 10,
+    "document": [{
+      "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+      "publicKey":[
+        {
+          "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+          "publicKeyBase58":"29sd8BAPMWcTvDxT2igvQ86rbd8WYboYbmt3szo1zszdB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+        "signatureValue":"DNBIrcX9...Dz0j5q1g"
+      }
+    }, {
+      "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+      "publicKey":[
+        {
+          "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+          "publicKeyBase58":"22z1jcrBqX75yRBUNgDHkWmPs1SGe57gkHYA7UCij6Nge"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+        "signatureValue":"vJH4s1KH...LWSU-8MA"
+      }
+    }, 
+    ......
+    {
+      "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+      "publicKey":[
+        {
+          "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+          "publicKeyBase58":"26aiYAHBGGKvHWneoaLfgJNKihfGjhHsva1YLBT89WvFB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+        "signatureValue":"4yoSU799...zv5euakA"
+      }
+    }]
+  }
 }
 ```
+
+
 
 #### Empty query result
 
@@ -542,14 +748,7 @@ When the DID Query executes successfully , the response must contain the result 
 {
     "method": "query",
     "params":{
-        "query": {
-            "credential": {
-                "type": ["InternetCrdential"],
-                "subject": {
-                    "email": { $exists: true }
-                }
-            }
-        }
+        "query": "{\"credential\":{\"type\":[\"InternetCredential\"],\"subject\":{\"email\":{$exists:true}}}}"
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
@@ -561,7 +760,12 @@ When the DID Query executes successfully , the response must contain the result 
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
-  "result": []
+  "result": {
+    "count": 0,
+    "skip": 0,
+    "limit": 0,
+    "document": []
+  }
 }
 ```
 
@@ -573,15 +777,8 @@ When the DID Query executes successfully , the response must contain the result 
 {
     "method": "query",
     "params":{
-        "service" : "carrier",
-        "query": {
-            "credential": {
-                "type": ["InternetCrdential"],
-                "subject": {
-                    "email": { $exists: true }
-                }
-            }
-        }
+        "service": "carrier",
+        "query": "{\"credential\":{\"type\":[\"SelfProclaimedCredential\"],\"subject\":{\"email\":{$exists:true}}}}"
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
