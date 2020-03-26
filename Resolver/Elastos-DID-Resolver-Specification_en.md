@@ -1,4 +1,4 @@
-# Elastos DID Resolver Specification v0.2
+# Elastos DID Resolver Specification
 
 Smart Web Powered by Blockchain
 
@@ -6,11 +6,11 @@ Smart Web Powered by Blockchain
 
 Elastos Foundation
 
-30 November 2019
+18 March 2019
 
 **Version**
 
-0.2
+0.3
 
 **Description of Contents**
 
@@ -29,16 +29,21 @@ The copyright of this document belong to the Elastos Foundation. All rights rese
 
 ## Abstract
 
+This specification defines the method and interface for resolving or querying DID on the Elastos ID side chain.
+
 Elastos uses the [JSON-RPC](https://www.jsonrpc.org/specification) interface to provide the DID resolve method. For more details about [JSON-RPC](https://www.jsonrpc.org/specification), please see specifications on the official website.
 
+## DID Resolve
 
-## Resolve Request
+DID Resolve is the method used to resolve specific DID documents.
 
-### method
+### Resolve Request
+
+#### method
 
 The string value contains the name of the method to be invoked. For the DID Resolve request, the value is "resolvedid".
 
-### params
+#### params
 
 The object value, which is the parameter to be included in the call of `resolvedid`  method. The parameters are defined as follows:
 
@@ -46,45 +51,42 @@ The object value, which is the parameter to be included in the call of `resolved
 
   DID string. Can be a complete DID string, such as *did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4*, or just a method specific string, such as: *iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4*.
 
-
 - all
 
   Whether or not all operation history of this DID are obtained. Boolean, true or false.
 
-
-### id
+#### id
 
 The request identifier set by the client must include a string, numerical or null value (if contained). The value usually should not be null, and the numerals should not include decimals.
 
+### Resolve Response
 
-## Resolve Response
-
-### jsonrpc
+#### jsonrpc
 
 The JSON-RPC default response property, a string value, indicates the JSON-RPC protocol version. Must be "2.0."
 
-### result
+#### result
 
 If Resolve is executed successfully, then this member is included, and the value is the result object of resolve. If an error occurs when resolve is invoked, then this member does not exist or is null. See [Resolve Result Object](#resolve-result-object) for the definition of the DID Resolver’s resolve result object.
 
 
-### error
+#### error
 
 If Resolve executes normally, then this member does not exist or is null. If there is an error in the execution of Resolve, this member is included, the value is an error object. See [Error Object](#error-object) for the definition of error objects.
 
-### id
+#### id
 
 This member is necessary. It must be identical to the value of the id member in the request object. If an error occurs at the time of ID inspection in the request object (for example resolve error/invalid request), then this value must be null.
 
-## Resolve Result Object
+### Resolve Result Object
 
 When the DID Resolve executes successfully, the response must contain a result member whose value is an object containing the following members:
 
-### did
+#### did
 
 The request's target DID.
 
-### status
+#### status
 
 The numerical value type status code indicates the result status of resolving target DID. This value is an integer. The value is defined as the following:
 
@@ -97,7 +99,7 @@ The numerical value type status code indicates the result status of resolving ta
 
 > When resolving a DID, regardless of the DID status, it should return this object, and should not return the error object, as long as the resolve is executed normally. Different resolve results are expressed though different status values. For example, statuses such as DID does not exists, is expired, or is deactivated, are all normal, and should return this object. It will only return the error object when the Resolver service cannot execute resolve actions, and in general is a JSON-RPC error or a Resolver error itself.
 
-### transaction
+#### transaction
 
 An array object, and the elements are the ID transaction and operation information of the target DID being requested. The element is an object containing the following members:
 
@@ -115,38 +117,11 @@ An array object, and the elements are the ID transaction and operation informati
 
 When`all` in [the parameters of Resolve DID request](#params) is *false*, the transaction array object only contains information from the target ID's last transaction. When `all` is *true*, the transaction array object contains all transaction information of the target DID, and the array elements are stored in descending order according to ID’s transaction time, meaning that no. #0 is the newest ID transaction.
 
-## Error object
+### Examples
 
-When the Resolve encounters an error, an error member must be contained in the response, whose value is an object containing the following members:
+#### Resolve the DID document, and the document is valid
 
-### code
-
-The numerical type error code indicating the error type occurred. This value is an integer.
-
-According to the definition in [specification](https://www.jsonrpc.org/specification), error codes from -32768 to -32000 (including -32768 to -32000) are reserved for predefined errors. Any code within this scope that has not been specifically defined below is reserved for future use. 
-
-| code             | message          | meaning                                                                                               |
-| ---------------- | ---------------- | ----------------------------------------------------------------------------------------------------- |
-| -32700           | Parse error      | Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text. |
-| -32600           | Invalid Request  | The JSON sent is not a valid Request object.                                                          |
-| -32601           | Method not found | The method does not exist / is not available.                                                         |
-| -32602           | Invalid params   | Invalid method parameter(s).                                                                          |
-| -32603           | Internal error   | Internal JSON-RPC error.                                                                              |
-| -32000 to -32099 | Server error     | Reserved for implementation-defined server-errors.                                                    |
-
-### message
-
-A string briefly describing the error. Generally, a concise sentence.
-
-### data
-
-Member optional, contains other information related to the error. The value is defined by the Resolver server (for example, detailed error information, nested errors, etc.).
-
-## Examples
-
-### Resolve the DID document, and the document is valid
-
-#### Request
+##### Request
 
 ```json
 {
@@ -159,7 +134,7 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-#### Response
+##### Response
 
 ```json
 {
@@ -189,9 +164,9 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-### Resolve the DID document, the document is expired
+#### Resolve the DID document, the document is expired
 
-#### Request
+##### Request
 
 ```json
 {
@@ -204,7 +179,7 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-#### Response
+##### Response
 
 ```json
 {
@@ -234,9 +209,9 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-### Resolve the DID document, the DID has been deactivated
+#### Resolve the DID document, the DID has been deactivated
 
-#### Request
+##### Request
 
 ```json
 {
@@ -249,7 +224,7 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-#### Response
+##### Response
 
 ```json
 {
@@ -277,9 +252,9 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-### Resolve the DID document, the DID does not exist
+#### Resolve the DID document, the DID does not exist
 
-#### Request
+##### Request
 
 ```json
 {
@@ -292,7 +267,7 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-#### Response
+##### Response
 
 ```json
 {
@@ -305,9 +280,9 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-### Resolve all DID operation records
+#### Resolve all DID operation records
 
-#### Request
+##### Request
 
 ```json
 {
@@ -320,7 +295,7 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-#### Response
+##### Response
 
 ```json
 {
@@ -381,9 +356,9 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-### Resolve the DID error
+#### Resolve the DID error
 
-#### Request
+##### Request
 
 ```json
 {
@@ -396,7 +371,7 @@ Member optional, contains other information related to the error. The value is d
 }
 ```
 
-#### Response
+##### Response
 
 ```json
 {
@@ -408,3 +383,445 @@ Member optional, contains other information related to the error. The value is d
   }
 }
 ```
+
+## DID Query
+
+DID Query is a method for querying DID documents on the ID side chain. The query scope is all latest DID documents in non-deactivated state, the expired documents are in the scope.
+
+### Query Request
+
+#### method
+
+The string value contains the name of the method to be invoked. For the DID query request, the value is "query".
+
+#### params
+
+The object value, which is the parameter to be included in the call of  `query`  method. The parameters are defined as follows:
+
+- service
+
+  Optional, a string representing the service type. For service type, see the definition of service in the Elastos DID method specification. Only supports single values. For complex queries, use "query".
+
+- credential
+
+  Optional, a string representing the credential type. For credential type, see the definition of credential in the Elastos Verifiable Claims Specification. Only supports single values. For complex queries, use "query".
+
+- query
+
+  Optional, query conditions in MongoDB query syntax, only supports the conditional syntax of MongoDB's find method.
+
+- skip
+
+  Optional, the number of documents to skip in the results set. The default value is 0.
+
+- limit
+
+  Optional, the number of documents returned in the result set.
+
+  If no limit is specified, the size of the results returned is determined by the server. If the result set is large, the server may return a subset of the results to avoid excessive server resource consumption.
+
+Although all the above three parameters  `service`, `credential` and `query` are optional, they can only support one and must have one.
+
+The `skip` and `limit` parameters are used to provide pagination support, which controls the subset of the query results that should be returned.
+
+#### id
+
+The request identifier set by the client must include a string, numerical or null value (if contained). The value usually should not be null, and the numerals should not include decimals.
+
+### Query Response
+
+#### jsonrpc
+
+The JSON-RPC default response property, a string value, indicates the JSON-RPC protocol version. Must be "2.0."
+
+#### result
+
+If query is executed successfully, then this member is included, and the value is the result object of query. If an error occurs when query is invoked, then this member does not exist or is null. See [Query Result Object](#query-result-object) for the definition of the DID query result object.
+
+#### error
+
+If query executes normally, then this member does not exist or is null. If there is an error in the execution of query, this member is included, the value is an error object. See [Error Object](#error-object) for the definition of error objects.
+
+#### id
+
+This member is necessary. It must be identical to the value of the id member in the request object. If an error occurs at the time of ID inspection in the request object (for example query error/invalid request), then this value must be null.
+
+### Query Result Object
+
+When the DID Query executes successfully, the response must contain a result member whose value is an object containing the following members:
+
+#### total
+
+The total number of document that meet the query conditions.
+
+#### start
+
+The start document position of the current results set.
+
+#### count
+
+The number of documents returned in the current result set.
+
+#### document
+
+An array object, and the elements are the DID document that meet the query conditions. If there are no matching DIDs, an empty array is returned.
+
+### Examples
+
+#### Querying DIDs containing specific service, return the 3rd page, 10 documents per page
+
+##### Request
+
+```json
+{
+    "method": "query",
+    "params":{
+        "service": "CredentialRepositoryService",
+        "skip": 20,
+        "limit": 10
+    },
+    "id": "8555cbd1afbf3b8fd8748464ee949574"
+}
+```
+
+##### Response
+
+```json
+{
+  "id": "8555cbd1afbf3b8fd8748464ee949574",
+  "jsonrpc": "2.0",
+  "result": {
+    "total": 1234,
+    "start": 20,
+    "count": 10,
+    "document": [{
+      "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+      "publicKey":[
+        {
+          "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+          "publicKeyBase58":"29sd8BAPMWcTvDxT2igvQ86rbd8WYboYbmt3szo1zszdB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+        "signatureValue":"DNBIrcX9...Dz0j5q1g"
+      }
+    }, {
+      "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+      "publicKey":[
+        {
+          "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+          "publicKeyBase58":"22z1jcrBqX75yRBUNgDHkWmPs1SGe57gkHYA7UCij6Nge"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+        "signatureValue":"vJH4s1KH...LWSU-8MA"
+      }
+    },
+    ......
+    {
+      "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+      "publicKey":[
+        {
+          "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+          "publicKeyBase58":"26aiYAHBGGKvHWneoaLfgJNKihfGjhHsva1YLBT89WvFB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+        "signatureValue":"4yoSU799...zv5euakA"
+      }
+    }]
+  }
+}
+```
+
+#### Querying DIDs containing specific credential
+
+##### Request
+
+```json
+{
+    "method": "query",
+    "params":{
+        "credential": "TrinityCredential"
+    },
+    "id": "8555cbd1afbf3b8fd8748464ee949574"
+}
+```
+
+##### Response
+
+```json
+{
+  "id": "8555cbd1afbf3b8fd8748464ee949574",
+  "jsonrpc": "2.0",
+  "result": {
+    "total": 1234,
+    "start": 0,
+    "count": 20,
+    "document": [{
+      "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+      "publicKey":[
+        {
+          "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+          "publicKeyBase58":"29sd8BAPMWcTvDxT2igvQ86rbd8WYboYbmt3szo1zszdB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+        "signatureValue":"DNBIrcX9...Dz0j5q1g"
+      }
+    }, {
+      "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+      "publicKey":[
+        {
+          "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+          "publicKeyBase58":"22z1jcrBqX75yRBUNgDHkWmPs1SGe57gkHYA7UCij6Nge"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+        "signatureValue":"vJH4s1KH...LWSU-8MA"
+      }
+    },
+    ......
+    {
+      "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+      "publicKey":[
+        {
+          "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+          "publicKeyBase58":"26aiYAHBGGKvHWneoaLfgJNKihfGjhHsva1YLBT89WvFB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+        "signatureValue":"4yoSU799...zv5euakA"
+      }
+    }]
+  }
+}
+```
+
+#### Customized query
+
+##### MongoDB's find condition
+
+```json
+{
+    "credential": {
+        "type": ["SelfProclaimedCredential"],
+        "subject": {
+            "email": { $exists: true }
+        }
+    }
+}
+```
+
+##### Request
+
+```json
+{
+  	"method": "query",
+    "params":{
+      	"query": "{\"credential\":{\"type\":[\"SelfProclaimedCredential\"],\"subject\":{\"email\":{$exists:true}}}}",
+        "skip": 10,
+        "limit": 10
+    },
+    "id": "8555cbd1afbf3b8fd8748464ee949574"
+}
+```
+
+##### Response
+
+```json
+{
+  "id": "8555cbd1afbf3b8fd8748464ee949574",
+  "jsonrpc": "2.0",
+  "result": {
+    "total": 1234,
+    "start": 10,
+    "count": 10,
+    "document": [{
+      "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+      "publicKey":[
+        {
+          "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
+          "publicKeyBase58":"29sd8BAPMWcTvDxT2igvQ86rbd8WYboYbmt3szo1zszdB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz#primary",
+        "signatureValue":"DNBIrcX9...Dz0j5q1g"
+      }
+    }, {
+      "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+      "publicKey":[
+        {
+          "id":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m",
+          "publicKeyBase58":"22z1jcrBqX75yRBUNgDHkWmPs1SGe57gkHYA7UCij6Nge"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
+        "signatureValue":"vJH4s1KH...LWSU-8MA"
+      }
+    },
+    ......
+    {
+      "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+      "publicKey":[
+        {
+          "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+          "type":"ECDSAsecp256r1",
+          "controller":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
+          "publicKeyBase58":"26aiYAHBGGKvHWneoaLfgJNKihfGjhHsva1YLBT89WvFB"
+        }
+      ],
+      ......
+      "expires":"2025-03-24T02:25:41Z",
+      "proof":{
+        "type":"ECDSAsecp256r1",
+        "created":"2020-03-24T02:25:41Z",
+        "creator":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT#primary",
+        "signatureValue":"4yoSU799...zv5euakA"
+      }
+    }]
+  }
+}
+```
+
+
+
+#### Empty query result
+
+##### Request
+
+```json
+{
+    "method": "query",
+    "params":{
+        "query": "{\"credential\":{\"type\":[\"InternetCredential\"],\"subject\":{\"email\":{$exists:true}}}}"
+    },
+    "id": "8555cbd1afbf3b8fd8748464ee949574"
+}
+```
+
+##### Response
+
+```json
+{
+  "id": "8555cbd1afbf3b8fd8748464ee949574",
+  "jsonrpc": "2.0",
+  "result": {
+    "total": 0,
+    "start": 0,
+    "count": 0,
+    "document": []
+  }
+}
+```
+
+#### Query error
+
+##### Request
+
+```json
+{
+    "method": "query",
+    "params":{
+        "service": "carrier",
+        "query": "{\"credential\":{\"type\":[\"SelfProclaimedCredential\"],\"subject\":{\"email\":{$exists:true}}}}"
+    },
+    "id": "8555cbd1afbf3b8fd8748464ee949574"
+}
+```
+
+##### Response
+
+```json
+{
+  "id": "8555cbd1afbf3b8fd8748464ee949574",
+  "jsonrpc": "2.0",
+  "error": {
+    "code": -32602,
+    "message": "Query parameters invalid."
+  }
+}
+```
+
+## Error object
+
+When the Resolve or Query encounters an error, an error member must be contained in the response, whose value is an object containing the following members:
+
+### code
+
+The numerical type error code indicating the error type occurred. This value is an integer.
+
+According to the definition in [specification](https://www.jsonrpc.org/specification), error codes from -32768 to -32000 (including -32768 to -32000) are reserved for predefined errors. Any code within this scope that has not been specifically defined below is reserved for future use.
+
+| code             | message          | meaning                                                                                               |
+| ---------------- | ---------------- | ----------------------------------------------------------------------------------------------------- |
+| -32700           | Parse error      | Invalid JSON was received by the server. An error occurred on the server while parsing the JSON text. |
+| -32600           | Invalid Request  | The JSON sent is not a valid Request object.                                                          |
+| -32601           | Method not found | The method does not exist / is not available.                                                         |
+| -32602           | Invalid params   | Invalid method parameter(s).                                                                          |
+| -32603           | Internal error   | Internal JSON-RPC error.                                                                              |
+| -32000 to -32099 | Server error     | Reserved for implementation-defined server-errors.                                                    |
+
+### message
+
+A string briefly describing the error. Generally, a concise sentence.
+
+### data
+
+Member optional, contains other information related to the error. The value is defined by the Resolver server (for example, detailed error information, nested errors, etc.).
