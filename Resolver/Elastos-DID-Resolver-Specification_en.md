@@ -400,27 +400,29 @@ The object value, which is the parameter to be included in the call of  `query` 
 
 - service
 
-  Optional, a string representing the service type. For service type, see the definition of service in the Elastos DID method specification. Only supports a single type of query.
+  Optional, a string representing the service type. For service type, see the definition of service in the Elastos DID method specification. Only supports single values. For complex queries, use "query".
 
 - credential
 
-  Optional, a string representing the credential type. For credential type, see the definition of credential in the Elastos Verifiable Claims Specification. Only supports a single type of query.
+  Optional, a string representing the credential type. For credential type, see the definition of credential in the Elastos Verifiable Claims Specification. Only supports single values. For complex queries, use "query".
 
 - query
 
-  Optional, query conditions in MongoDB query syntax, only  supportes the conditional syntax of MongoDB's find method
+  Optional, query conditions in MongoDB query syntax, only supports the conditional syntax of MongoDB's find method.
 
 - skip
 
-  Optional, the number of documents to skip in the results set.
+  Optional, the number of documents to skip in the results set. The default value is 0.
 
 - limit
 
   Optional, the number of documents returned in the result set.
 
+  If no limit is specified, the size of the results returned is determined by the server. If the result set is large, the server may return a subset of the results to avoid excessive server resource consumption.
+
 Although all the above three parameters  `service`, `credential` and `query` are optional, they can only support one and must have one.
 
-The `skip` and `limit` parameters are used to provide paging support, which controls the subset of the query results should return.
+The `skip` and `limit` parameters are used to provide pagination support, which controls the subset of the query results that should be returned.
 
 #### id
 
@@ -448,17 +450,17 @@ This member is necessary. It must be identical to the value of the id member in 
 
 When the DID Query executes successfully, the response must contain a result member whose value is an object containing the following members:
 
+#### total
+
+The total number of document that meet the query conditions.
+
+#### start
+
+The start document position of the current results set.
+
 #### count
 
-The total unmber of document  that meet the query conditions.
-
-#### skip
-
-The number of documents to skip in the results set.
-
-#### limit
-
-The number of documents returned in the result set.
+The number of documents returned in the current result set.
 
 #### document
 
@@ -489,9 +491,9 @@ An array object, and the elements are the DID document that meet the query condi
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
   "result": {
-    "count": 1234,
-    "skip": 20,
-    "limit": 10,
+    "total": 1234,
+    "start": 20,
+    "count": 10,
     "document": [{
       "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
       "publicKey":[
@@ -528,7 +530,7 @@ An array object, and the elements are the DID document that meet the query condi
         "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
         "signatureValue":"vJH4s1KH...LWSU-8MA"
       }
-    }, 
+    },
     ......
     {
       "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
@@ -574,9 +576,9 @@ An array object, and the elements are the DID document that meet the query condi
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
   "result": {
-    "count": 1234,
-    "skip": 0,
-    "limit": 0,
+    "total": 1234,
+    "start": 0,
+    "count": 20,
     "document": [{
       "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
       "publicKey":[
@@ -613,7 +615,7 @@ An array object, and the elements are the DID document that meet the query condi
         "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
         "signatureValue":"vJH4s1KH...LWSU-8MA"
       }
-    }, 
+    },
     ......
     {
       "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
@@ -674,9 +676,9 @@ An array object, and the elements are the DID document that meet the query condi
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
   "result": {
-    "count": 1234,
-    "skip": 10,
-    "limit": 10,
+    "total": 1234,
+    "start": 10,
+    "count": 10,
     "document": [{
       "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
       "publicKey":[
@@ -713,7 +715,7 @@ An array object, and the elements are the DID document that meet the query condi
         "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
         "signatureValue":"vJH4s1KH...LWSU-8MA"
       }
-    }, 
+    },
     ......
     {
       "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
@@ -761,9 +763,9 @@ An array object, and the elements are the DID document that meet the query condi
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
   "result": {
+    "total": 0,
+    "start": 0,
     "count": 0,
-    "skip": 0,
-    "limit": 0,
     "document": []
   }
 }
@@ -805,7 +807,7 @@ When the Resolve or Query encounters an error, an error member must be contained
 
 The numerical type error code indicating the error type occurred. This value is an integer.
 
-According to the definition in [specification](https://www.jsonrpc.org/specification), error codes from -32768 to -32000 (including -32768 to -32000) are reserved for predefined errors. Any code within this scope that has not been specifically defined below is reserved for future use. 
+According to the definition in [specification](https://www.jsonrpc.org/specification), error codes from -32768 to -32000 (including -32768 to -32000) are reserved for predefined errors. Any code within this scope that has not been specifically defined below is reserved for future use.
 
 | code             | message          | meaning                                                                                               |
 | ---------------- | ---------------- | ----------------------------------------------------------------------------------------------------- |

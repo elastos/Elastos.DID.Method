@@ -398,23 +398,25 @@ DID Query是用来对ID侧链上的DID文档进行查询的方法，查询的数
 
 - service
 
-  可选，表示 service type 的字符串。关于service type，参见亦来云 DID 方法规范中 service 的定义。仅支持单一类型查询。
+  可选，表示 service type 的字符串。关于service type，参见亦来云 DID 方法规范中 service 的定义。仅支持单一类型查询，复杂查询请使用 "query"。
 
 - credential
 
-  可选，表示 credential type 的字符串。关于credential type，参见亦来云可验证声明规范中凭证类型定义。仅支持单一类型查询。
+  可选，表示 credential type 的字符串。关于credential type，参见亦来云可验证声明规范中凭证类型定义。仅支持单一类型查询，复杂查询请使用 "query"。
 
 - query
 
   可选，采用 MongoDB 语法的查询条件，仅支持MongoDB的find方法的条件语法。
-  
+
 - skip
 
-  可选，跳过查询结果的文档数量。
+  可选，跳过查询结果的文档数量。默认为0。
 
 - limit
 
   可选，指定查询结果返回的文档数量。
+
+  如果未指定 limit，则返回的结果大小将由服务器确定。如果结果集很大，则服务器可能会返回结果子集，以避免过多消耗服务器资源。
 
 上述三个条件参数`service`、`credential`和`query`虽然都可选，但同时只能支持一个，并且必须有一个。
 
@@ -446,15 +448,15 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 当DID Query成功执行时，response中必须包含result成员，其值是具有以下成员的对象：
 
-#### count
+#### total
 
 符合查询条件的DID文档总数。
 
-#### skip
+#### start
 
-跳过查询结果的文档数量。
+当前结果集的起始位置。
 
-#### limit
+#### count
 
 查询结果返回的文档数量。
 
@@ -487,9 +489,9 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
   "result": {
-    "count": 1234,
-    "skip": 20,
-    "limit": 10,
+    "total": 1234,
+    "start": 20,
+    "count": 10,
     "document": [{
       "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
       "publicKey":[
@@ -526,7 +528,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
         "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
         "signatureValue":"vJH4s1KH...LWSU-8MA"
       }
-    }, 
+    },
     ......
     {
       "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
@@ -572,9 +574,9 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
   "result": {
-    "count": 1234,
-    "skip": 0,
-    "limit": 0,
+    "total": 1234,
+    "start": 0,
+    "count": 20,
     "document": [{
       "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
       "publicKey":[
@@ -611,7 +613,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
         "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
         "signatureValue":"vJH4s1KH...LWSU-8MA"
       }
-    }, 
+    },
     ......
     {
       "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
@@ -672,9 +674,9 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
   "result": {
-    "count": 1234,
-    "skip": 10,
-    "limit": 10,
+    "total": 1234,
+    "start": 10,
+    "count": 10,
     "document": [{
       "id":"did:elastos:ir3YWGtyHNe9FoX9JXELgxCd8VkrGDaGcz",
       "publicKey":[
@@ -711,7 +713,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
         "creator":"did:elastos:ieMT72pyCe6NtHC9wbeKoVR1vjkWVTaG3m#primary",
         "signatureValue":"vJH4s1KH...LWSU-8MA"
       }
-    }, 
+    },
     ......
     {
       "id":"did:elastos:ioz9sPWmCdATbpbhSmrYGJ5V9hYkqT1kGT",
@@ -757,9 +759,9 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
   "result": {
+    "total": 0,
+    "start": 0,
     "count": 0,
-    "skip": 0,
-    "limit": 0,
     "document": []
   }
 }
