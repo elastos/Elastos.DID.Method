@@ -1,4 +1,4 @@
-# 亦来云可验证声明规范 v0.2
+﻿# 亦来云可验证声明规范 v0.3
 
 区块链驱动的智能万维网
 
@@ -174,6 +174,118 @@
 - `type`默认是`ECDSAsecp256r1`，可以省略。
 - `verificationMethod`表示证明方法，值是颁发者DID文档中用于签名和验证的公钥引用。
 - `signature`表示签名的值，使用Base64URL编码。
+
+### Verifiable Credentials操作
+
+对于Verifiable Credential操作，亦来云仅支持Verifiable Credential上传和撤销操作，相关的操作都需要在支持ID侧链的客户端中操作，并且需要使用 Verifiable Credentials所有者发起交易来实现。
+
+Verifiable Credential操作和DID操作类似，对应的凭证采用JSON格式保存在交易的payload中。Verifiable Credential操作JSON文档的属性定义如下：
+
+- 必须包含一个`header`属性，该属性包含DID操作的基本信息。`header`的属性定义如下：
+  - 必须包含一个`specification`属性，表示Verifiable Credential操作所符合的规范和版本，该规范支持`elastos/vc/2.0`。
+  - 必须包含一个`operation`属性，用来说明执行何种操作，属性值参见具体操作。
+- 必须包含一个`payload`属性，属性值是操作的Verifiable Credential。
+- 必须包含一个`proof`属性，该属性包含DID持有者操作DID的公钥和签名，用于证明是持有者本人操作。`proof`属性定义如下：
+  - `type`默认是`ECDSAsecp256r1`，可以省略。
+  - `verificationMethod`表示证明方法，值是颁发者DID文档中用于签名和验证的公钥引用。
+  - `signature`表示签名的值，使用Base64URL编码。
+
+
+### 上传/Upload Verifiable Credential
+
+上传Verifiable Credential需要DID客户端根据持有人拥有的密钥对，通过该公钥对上传Verifiable Credential进行认证，其它的属性由应用或者用户根据需求填写。
+
+上传Verifiable Credential的规则是：
+
+- 必须包含一个`header`属性，其中`operation`属性值是`upload`，表示上传Verifiable Credential。
+- 必须包含`payload`属性，值是Verifiable Credential采用Base64URL模式编码的文档。
+- 必须包含一个`proof`属性，包含DID所有者的公钥引用和签名，用于证明该操作是DID持有者发起。
+
+例如：
+
+```json
+{
+  "header": {
+    "specification": "elastos/vc/2.0",
+    "operation": "upload"
+  },
+  "payload": "ICAiZG9jIjogewogICAgImlkIjogImRpZDplbGFzdG9zOmljSjR6MkRVTHJIRXpZU3ZqS05KcEt5aHFGRHh2WVY3cE4iLAogICAgInB1YmxpY0tleSI6IFt7CiAgICAgICJpZCI6ICIjbWFzdGVyLWtleSIsCiAgICAgICJwdWJsaWNLZXlCYXNlNTgiOiAiek54b1phWkxkYWNrWlFOTWFzN3NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3anlZWGJ4Tm9wWFZ1ZnRCZSIKICAgIH0sIHsKICAgICAgImlkIjogIiNyZWNvdmVyeS1rZXkiLAogICAgICAiY29udHJvbGxlciI6ICJkaWQ6ZWxhc3RvczppcDdudERvMm1ldEduVTh3R1A0Rm55S0NVZGJIbTRCUERoIiwKICAgICAgInB1YmxpY0tleUJhc2U1OCI6ICJ6cHB5MzNpMnIzdUMxTFQzUkZjTHFKSlBGcFl1WlBEdUtNZUtaNVRkQXNrTSIKICAgIH1dLAogICAgImF1dGhlbnRpY2F0aW9uIjogWwogICAgICAibWFzdGVyLWtleXMiLAogICAgICAiI2tleS0yIiwKICAgIF0sCiAgICAuLi4KICB9LA",
+  "proof": {
+    "type": "ECDSAsecp256r1",
+    "verificationMethod": "#primary",
+    "signature": "JCAlfEBh...I3NSwg="
+  }
+}
+```
+
+其中payload是以下Verifiable Credential通过Base64URL编码后的结果：
+
+```json
+{
+  "id" : "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#email",
+  "type" : [ "BasicProfileCredential", "EmailCredential", "InternetAccountCredential" ],
+  "issuer" : "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
+  "issuanceDate" : "2020-01-03T06:08:20Z",
+  "expirationDate" : "2025-01-03T06:08:20Z",
+  "credentialSubject" : {
+    "id" : "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+    "email" : "john@example.com"
+  },
+  "proof" : {
+    "type" : "ECDSAsecp256r1",
+    "verificationMethod" : "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
+    "signature" : "uNqJdVuU279eLyaa400nKGxwHTkRZ1bWKiy9Ro-DXwc92rS-qP24dMiLkijfh1hS1YEwCOUXzbRpFXhwg5dv9g"
+  }
+}
+```
+
+### 撤销/Repeal Verifiable Credential
+
+上传Verifiable Credential需要DID客户端根据持有人拥有的密钥对，通过该公钥对上传Verifiable Credential进行认证，其它的属性由应用或者用户根据需求填写。
+
+创建DID的规则是：
+
+- 必须包含一个`header`属性，其中`operation`属性值是`repeal`，表示撤销Verifiable Credential。
+- 必须包含`payload`属性，值是Verifiable Credential的id值。
+- 必须包含一个`proof`属性，包含DID所有者的公钥引用和签名，用于证明该操作是DID持有者发起。
+
+例如：
+
+```json
+{
+  "header": {
+    "specification": "elastos/vc/2.0",
+    "operation": "repeal"
+  },
+  "payload": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#email",
+  "proof": {
+    "type": "ECDSAsecp256r1",
+    "verificationMethod": "#primary",
+    "signature": "JCAlfEBh...I3NSwg="
+  }
+}
+```
+
+其中payload是以下Verifiable Credential通过Base64URL编码后的结果：
+
+```json
+{
+  "id" : "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#email",
+  "type" : [ "BasicProfileCredential", "EmailCredential", "InternetAccountCredential" ],
+  "issuer" : "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
+  "issuanceDate" : "2020-01-03T06:08:20Z",
+  "expirationDate" : "2025-01-03T06:08:20Z",
+  "credentialSubject" : {
+    "id" : "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+    "email" : "john@example.com"
+  },
+  "proof" : {
+    "type" : "ECDSAsecp256r1",
+    "verificationMethod" : "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
+    "signature" : "uNqJdVuU279eLyaa400nKGxwHTkRZ1bWKiy9Ro-DXwc92rS-qP24dMiLkijfh1hS1YEwCOUXzbRpFXhwg5dv9g"
+  }
+}
+```
 
 ### 可验证表达/Verifiable Presentations
 

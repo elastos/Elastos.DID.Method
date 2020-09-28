@@ -1,4 +1,4 @@
-# 亦来云DID方法规范 v0.2
+﻿# 亦来云DID方法规范 v0.3
 
 区块链驱动的智能万维网
 
@@ -90,7 +90,8 @@ sub-delims         = "!" / "$" / "&" / "'" / "(" / ")"
 
 ## DID字符串
 
-亦来云DID中的ID字符串是使用Bitcoin风格Base58编码的ID侧链地址，并且以字母`i`开始，如`icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN`，ID字符串区分大小写。
+亦来云DID中的ID字符串支持两种格式：第一种是默认标识符，使用Bitcoin风格Base58编码的ID侧链地址，并且以字母`i`开始，如`icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN`，ID字符串区分大小写；第二种是用户自定义标识符，也具有唯一性。
+
 
 ## DID文档
 
@@ -107,13 +108,18 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 - DID文档必须有一个且只有一个DID主题。
 - 主题的key必须是`id`。
 - 主题的值必须是一个有效的DID描述符。
-- 当该DID文档注册到ID侧链上时，该DID描述符要和持有者的公钥相对应。
 
 例如：
 
 ```json5
+
+默认DID：
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN"
+}
+自定义DID：
+{
+  "id": "did:elastos:trinity"
 }
 ```
 
@@ -121,17 +127,18 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 公钥用于数字签名、加密等操作，主要的目的是实现身份认证，或与服务端点建立安全通信。 此外，公钥也可用于DID授权和委托，并在DID CRUD操作中用来验证操作的合法性。
 
-亦来云DID文档中至少需要包含一个公钥，即DID描述符对应的公钥。
 
 公钥的规则是：
 
 - DID文档必须包含一个`publicKey`属性。
 - `publicKey`属性的值必须是公钥数组。
 - 每个公钥必须包含`id`和`type`属性。 公钥数组不应该包含具有相同`id`和具有不同格式的不同值属性的重复条目。
-- `id`属性值由该DID标识符和一个自定义的URI片段构成，如`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key`，出于保持数据紧凑的目的，可以省略前面的DID标识符，而仅使用URI片段部分，如`#master-key`。
-- 亦来云公钥必须包含`type`，默认是`ECDSAsecp256r1`。
-- 每个公钥可以包含一个`controller`属性，用于表示相应私钥控制者的DID；默认为所在文档的DID，这种情况可省略该属性。
-- 每个公钥必须包含一个`publicKeyBase58` 属性，用来存放Base58编码的公钥。
+- `id`属性值由该DID标识符和一个自定义的URI片段构成，如`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key`，当DID标识符和文档subject相同的情况下，出于保持数据紧凑的目的，可以省略前面的DID标识符，而仅使用URI片段部分，如`#master-key`。
+- 亦来云公钥的`type`默认是`ECDSAsecp256r1`。
+- 每个公钥可以包含一个`controller`属性，表示相应私钥控制者的DID；默认为所在文档的DID，这种情况可省略该属性。
+- 每个公钥必须包含一个`publicKeyBase58` 属性，用于存放Base58编码的公钥。
+
+亦来云DID文档中至少需要包含一个主公钥（default key），主公钥的URI片段为primary。
 
 例如：
 
@@ -139,7 +146,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   "publicKey": [{ // 和DID地址对应的公钥
-    "id": "#master-key",
+    "id": "#primary",
     "type": "ECDSAsecp256r1",
     "controller": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
     "publicKeyBase58": "zNxoZaZLdackZQNMas7sCkPRHZsJ3BtdjEvM2y5gNvKJ"
@@ -162,9 +169,12 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 身份验证的规则是：
 
-- DID文档可以包含最多一个`authentication`属性。
+- DID文档必须包含且最多一个`authentication`属性。
+
 - `authentication`属性的值是一个验证方法数组，即可用于身份验证的公钥数组。
-- 可以嵌入或引用验证方法。 在引用时可以是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key`和`#master-key`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥public-keys)一致。
+
+- 可以嵌入或引用验证方法。 在引用时是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#primary`和`#primary`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥/Public Keys)一致。
+- authentication数组至少有一个公钥，即为主公钥。
 
 例如：
 
@@ -174,7 +184,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
   ...
   "authentication": [
     // 可以用于认证的公钥引用
-    "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-keys",
+    "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#primary",
     // 可以用于认证的公钥引用
     "#key-2",
     // *仅仅用于* 认证的公钥，采用内嵌的形式书写在authentication中，
@@ -192,12 +202,13 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 授权是用于说明如何代表DID主题执行操作的机制。 委托是指DID主题可以授权他人代表他们行事的机制。 这对于DID密钥丢失情况下的DID安全善后事宜尤其重要，当主体不再能够访问其密钥或密钥泄露时，DID持有者授权的可信第三方可以声明停用该DID，从而禁止在密钥泄露的情况下导致的一些恶意行为。
 
-亦来云DID的授权和委托仅支持必要的最小授权，即授权可信第三方用于停用目标DID，不支持其它操作。
+亦来云DID的授权和委托包含停用DID和支持DID公钥轮换。
 
 授权和委托的规则是：
 
 - DID文档可以包含最多一个`authorization`属性。
 - `authorization`属性的值应该是一个验证方法数组，即可用于委托的公钥数组。
+
 - 可以嵌入或引用每种验证方法。 在引用时可以是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#recovery-key`和`#recovery-key`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥public-keys)一致。
 
 ```json5
@@ -227,6 +238,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 - DID文档可以包含最多一个`verifiableCredential`属性。
 - `verifiableCredential`属性的值应该是一个可验证凭证(Verifiable Credential)的数组。
+- `id`属性值有两种格式：第一种是由该DID标识符和一个自定义的URI片段构成，如`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#recovery-key`，当DID标识符和文档subject相同的情况下，出于保持数据紧凑的目的，可以省略前面的DID标识符，而仅使用URI片段部分，如`#recovery-key`；第二种是通用的URI或者URN标识符，如   http://example.gov/credentials/3732。
 - 在可验证凭证中可以省略`credentialSubject`中的`id`属性，默认是当前DID主题；如果是完全自我声明的凭证，那么`verifiableCredential`的`proof`属性也可以省略，因为该声明是在用户私钥控制下更新的。
 
 例如：
@@ -351,7 +363,7 @@ Proof的规则是：
   ...
   "proof": {
     "type": "ECDSAsecp256r1",
-    "creator": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key",
+    "creator": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#primary",
     "signatureValue": "QNB13Y7Q9...1tzjn4w"
   }
 }
@@ -385,12 +397,12 @@ Proof的规则是：
 
 ## DID操作
 
-亦来云DID文档存储是基于ID侧链的，所以相关的操作都需要在支持ID侧链的客户端中操作，并且需要使用对应DID主题的公钥给自己发起交易来实现。但是停用DID支持一个例外，允许DID主题授权和委托的DID公钥发起停用操作。
+亦来云DID文档存储是基于ID侧链的，所以相关的操作都需要在支持ID侧链的客户端中操作，并且需要使用对应DID主题的公钥给自己发起交易来实现。但是停用DID和委托key轮换例外，允许DID主题授权和委托的DID公钥发起相关操作。
 
 DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操作JSON文档的属性定义如下：
 
 - 必须包含一个`header`属性，该属性包含DID操作的基本信息。`header`的属性定义如下：
-  - 必须包含一个`specification`属性，表示DID操作所符合的规范和版本，当前只支持`elastos/did/1.0`。
+  - 必须包含一个`specification`属性，表示DID操作所符合的规范和版本，该规范支持`elastos/did/2.0`。
   - 必须包含一个`operation`属性，用来说明执行何种操作，属性值参见具体操作。
   - 根据操作需要，可以包含一个`previousTxid`属性。属性定义参见具体操作。
 - 必须包含一个`payload`属性，属性值是操作的目标DID文档或者DID主题。
@@ -416,7 +428,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 ```json5
 {
   "header": {
-    "specification": "elastos/did/1.0",
+    "specification": "elastos/did/2.0",
     "operation": "create"
   },
   "payload": "ICAiZG9jIjogewogICAgImlkIjogImRpZDplbGFzdG9zOmljSjR6MkRVTHJIRXpZU3ZqS05KcEt5aHFGRHh2WVY3cE4iLAogICAgInB1YmxpY0tleSI6IFt7CiAgICAgICJpZCI6ICIjbWFzdGVyLWtleSIsCiAgICAgICJwdWJsaWNLZXlCYXNlNTgiOiAiek54b1phWkxkYWNrWlFOTWFzN3NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3anlZWGJ4Tm9wWFZ1ZnRCZSIKICAgIH0sIHsKICAgICAgImlkIjogIiNyZWNvdmVyeS1rZXkiLAogICAgICAiY29udHJvbGxlciI6ICJkaWQ6ZWxhc3RvczppcDdudERvMm1ldEduVTh3R1A0Rm55S0NVZGJIbTRCUERoIiwKICAgICAgInB1YmxpY0tleUJhc2U1OCI6ICJ6cHB5MzNpMnIzdUMxTFQzUkZjTHFKSlBGcFl1WlBEdUtNZUtaNVRkQXNrTSIKICAgIH1dLAogICAgImF1dGhlbnRpY2F0aW9uIjogWwogICAgICAibWFzdGVyLWtleXMiLAogICAgICAiI2tleS0yIiwKICAgIF0sCiAgICAuLi4KICB9LA",
@@ -468,7 +480,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 ```json5
 {
   "header": {
-    "specification": "elastos/did/1.0",
+    "specification": "elastos/did/2.0",
     "operation": "update",
     "previousTxid": "3641de55f368583c...8917756a872093d2"
   },
@@ -476,6 +488,33 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
   "proof": {
     "verificationMethod": "#master-key",
     "signature": "ZGhscJxw...tCAgQA="
+  }
+}
+```
+
+### 更换主公钥/Roll Key
+
+DID持有者可以主动更换DID的主公钥，也可以授权委托者去更换DID主公钥，比如DID原主公钥对应私钥丢失，无法实现自我更换。
+
+更换DID主公钥的规则是：
+
+- 必须包含一个`header`属性，其中`operation`属性值是`rollkey`，表示更换DID主公钥。
+- 必须包含`payload`属性，值是新的DID文档，该文档是用原有主密钥或者委托者密钥进行签名后的文档。
+- 必须包含一个`proof`属性，包含DID所有者或者委托人的公钥引用和签名，用于证明该操作是DID持有者或者委托人发起。
+
+例如：
+
+```json
+{
+  "header": {
+    "specification": "elastos/did/2.0",
+    "operation": "rollkey",
+    "previousTxid": "3641de55f368583c...8917756a872093d2"
+  },
+  "payload": "ICAiZG9jIjogewogICAgImlkIjogImRpZDplbGFzdG9zOmljSjR6MkRVTHJIRXpZU3ZqS05KcEt5aHFGRHh2WVY3cE4iLAogICAgInB1YmxpY0tleSI6IFt7CiAgICAgICJpZCI6ICIjbWFzdGVyLWtleSIsCiAgICAgICJwdWJsaWNLZXlCYXNlNTgiOiAiek54b1phWkxkYWNrWlFOTWFzN3NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3anlZWGJ4Tm9wWFZ1ZnRCZSIKICAgIH0sIHsKICAgICAgImlkIjogIiNyZWNvdmVyeS1rZXkiLAogICAgICAiY29udHJvbGxlciI6ICJkaWQ6ZWxhc3RvczppcDdudERvMm1ldEduVTh3R1A0Rm55S0NVZGJIbTRCUERoIiwKICAgICAgInB1YmxpY0tleUJhc2U1OCI6ICJ6cHB5MzNpMnIzdUMxTFQzUkZjTHFKSlBGcFl1WlBEdUtNZUtaNVRkQXNrTSIKICAgIH1dLAogICAgImF1dGhlbnRpY2F0aW9uIjogWwogICAgICAibWFzdGVyLWtleXMiLAogICAgICAiI2tleS0yIiwKICAgIF0sCiAgICAuLi4KICB9LA",
+  "proof": {
+    "verificationMethod": "#proof-key",
+    "signature": "dkODxARE...hMUFRY="
   }
 }
 ```
@@ -497,7 +536,7 @@ DID持有者可以主动停用DID，比如DID持有者不再使用该DID，或�
 ```json5
 {
   "header": {
-    "specification": "elastos/did/1.0",
+    "specification": "elastos/did/2.0",
     "operation": "deactivate"
   },
   "payload": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
@@ -552,7 +591,7 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
 }
 ```
 
-该DID文档中默认有一个公钥，即和DID主题对应的公钥；其它DID默认属性如下：
+该DID文档中默认有一个主公钥，即和DID主题对应的公钥；其它DID默认属性如下：
 
 - 公钥`#key`的`type`是`ECDSAsecp256r1`。
 - 公钥`#key`的`controller`是目标DID主题`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN`持有者。
@@ -566,7 +605,7 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
 
   "publicKey": [{
-    "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#default",
+    "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#primary",
     "type": "ECDSAsecp256r1",
     "controller": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
     "publicKeyBase58": "zNxoZaZLdackZQNMas7sCkPRHZsJ3BtdjEvM2y5gNvKJ"
