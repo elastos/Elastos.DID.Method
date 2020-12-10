@@ -12,7 +12,7 @@ DID is completely under the control of the DID subject, without reliance on any 
 
 ## Specifications
 
-| Sspecification    | Link                                                                                                                                        |
+| Specification    | Link                                                                                                                                        |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | Method            | [EN](/DID/Elastos-DID-Method-Specification_en.md) [CN](/DID/Elastos-DID-Method-Specification_cn.md)                                         |
 | Resolve           | [EN](/Resolver/Elastos-DID-Resolver-Specification_en.md) [CN](/Resolver/Elastos-DID-Resolver-Specification_cn.md)                           |
