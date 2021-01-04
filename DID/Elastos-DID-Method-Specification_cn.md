@@ -111,7 +111,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 例如：
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN"
 }
@@ -135,7 +135,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 例如：
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   "publicKey": [{ // 和DID地址对应的公钥
@@ -168,7 +168,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 例如：
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -200,7 +200,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 - `authorization`属性的值应该是一个验证方法数组，即可用于委托的公钥数组。
 - 可以嵌入或引用每种验证方法。 在引用时可以是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#recovery-key`和`#recovery-key`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥public-keys)一致。
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -231,7 +231,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 例如：
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -302,7 +302,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 例如：
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -345,7 +345,7 @@ Proof的规则是：
 
 例如：
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -369,7 +369,7 @@ Proof的规则是：
 
 例如：
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -413,7 +413,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 
 例如：
 
-```json
+```json5
 {
   "header": {
     "specification": "elastos/did/1.0",
@@ -430,7 +430,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 
 其中payload是以下DID文档通过Base64URL编码后的结果：
 
-```json
+```json5
 {
     "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
     "publicKey": [{
@@ -465,7 +465,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 
 例如：
 
-```json
+```json5
 {
   "header": {
     "specification": "elastos/did/1.0",
@@ -494,7 +494,7 @@ DID持有者可以主动停用DID，比如DID持有者不再使用该DID，或�
 
 例如：
 
-```json
+```json5
 {
   "header": {
     "specification": "elastos/did/1.0",
@@ -542,7 +542,7 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
 
 ### 一个最简单的DID文档
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   "publicKey": [{
@@ -561,7 +561,7 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
 
 ### 一个复杂/冗长的DID文档
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
 

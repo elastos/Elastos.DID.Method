@@ -77,7 +77,7 @@
 
 例如一个自我声明的凭证片段：
 
-```json
+```json5
 {
   // specify the identifier for the credential
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-1",
@@ -97,7 +97,7 @@
 
 例如一个由Elastos IDteria自助服务颁发的凭证片段：
 
-```json
+```json5
 {
   // specify the identifier for the credential
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-2",
@@ -209,7 +209,7 @@
 
 #### 自主声明的可验证凭证
 
-```json
+```json5
 {
   // specify the identifier for the credential
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-1",
@@ -237,7 +237,7 @@
 
 #### 第三方颁发的可验证凭证
 
-```json
+```json5
 {
   // specify the identifier for the credential
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-2",
@@ -272,7 +272,7 @@
 
 #### 可验证表达
 
-```json
+```json5
 {
   "type": "VerifiablePresentation",
   "created": "2019-01-10T21:19:10Z",
