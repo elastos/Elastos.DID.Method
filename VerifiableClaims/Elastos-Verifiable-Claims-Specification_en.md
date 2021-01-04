@@ -52,7 +52,7 @@ Verifiable claims **must** be a single JSON object conforming to [RFC8259](https
 
 Credentials are a set of one or more claims made by an entity. Credentials should contain identifiers and metadata used to describe the credential's properties, such as issuer, expiration date and time, the public key used for verification purposes, and revocation mechanisms. Metadata and credential subject are signed by the issuer. Verifiable credentials are a set of anti-tampering claims and metadata, and uses cryptographic methods to prove whether the entity was issued as stated in the claim and has not been tampered.
 
-The definition of properties that can be contained in verifiable credentials are as follows. 
+The definition of properties that can be contained in verifiable credentials are as follows.
 
 #### ID
 
@@ -77,7 +77,7 @@ In order for Elastos ecosystem dApps to be able to have a unified understanding 
 
 For example, a self-claim credential fragment:
 
-```json
+```json5
 {
   // specify the identifier for the credential
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-1",
@@ -97,7 +97,7 @@ For example, a self-claim credential fragment:
 
 For example, a credential fragment issued by Elastos IDteria self-service:
 
-```json
+```json5
 {
   // specify the identifier for the credential
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-2",
@@ -209,7 +209,7 @@ Definitions of properties that can be contained by verifiable presentations are 
 
 #### Self Claim Verifiable Credentials
 
-```json
+```json5
 {
   // specify the identifier for the credential
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-1",
@@ -237,7 +237,7 @@ Definitions of properties that can be contained by verifiable presentations are 
 
 #### Verifiable credentials issued by a third party
 
-```json
+```json5
 {
   // specify the identifier for the credential
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-2",
@@ -272,7 +272,7 @@ Definitions of properties that can be contained by verifiable presentations are 
 
 #### Verifiable Presentation
 
-```json
+```json5
 {
   "type": "VerifiablePresentation",
   "created": "2019-01-10T21:19:10Z",

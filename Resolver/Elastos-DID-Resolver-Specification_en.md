@@ -123,7 +123,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -136,7 +136,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -168,7 +168,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -181,7 +181,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -213,7 +213,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -226,7 +226,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -256,7 +256,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -269,7 +269,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -284,7 +284,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -297,7 +297,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -360,7 +360,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -373,7 +373,7 @@ When`all` in [the parameters of Resolve DID request](#params) is *false*, the tr
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -472,7 +472,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### Request
 
-```json
+```json5
 {
     "method": "query",
     "params":{
@@ -486,7 +486,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -559,7 +559,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### Request
 
-```json
+```json5
 {
     "method": "query",
     "params":{
@@ -571,7 +571,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -644,7 +644,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### MongoDB's find condition
 
-```json
+```json5
 {
     "credential": {
         "type": ["SelfProclaimedCredential"],
@@ -657,7 +657,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### Request
 
-```json
+```json5
 {
   	"method": "query",
     "params":{
@@ -671,7 +671,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -746,7 +746,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### Request
 
-```json
+```json5
 {
     "method": "query",
     "params":{
@@ -758,7 +758,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -775,7 +775,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### Request
 
-```json
+```json5
 {
     "method": "query",
     "params":{
@@ -788,7 +788,7 @@ An array object, and the elements are the DID document that meet the query condi
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",

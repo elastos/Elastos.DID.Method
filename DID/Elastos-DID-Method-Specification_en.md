@@ -111,7 +111,7 @@ The subject is a unique identifier of a DID document and is used to represent th
 
 For example:
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN"
 }
@@ -135,7 +135,7 @@ Public key rules are as follows:
 
 For example:
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   "publicKey": [{ // public key corresponding to the DID address
@@ -168,7 +168,7 @@ The identity verification rules are:
 
 For example:
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -200,7 +200,7 @@ The rules for authorization and delegation are:
 - The value of the `authorization` property should be one array of verification methods, which can be an array of public keys used for delegation.
 - Each verification method can be embedded or referenced. When referenced, it can either be one complete public key URI, or just a fragment, such as: `did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#recovery-key` and `#recovery-key` are identical, and both reference the same public key. If an embedded public key is used, the rules for writing public keys are consistent with [Public Keys property](#public-keys).
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -231,7 +231,7 @@ The rules for verifiable credentials are:
 
 For example:
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -302,7 +302,7 @@ The rules for Service Endpoints are:
 
 For example:
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -345,7 +345,7 @@ The rules for proof are:
 
 For example:
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -369,7 +369,7 @@ The rules for expiration are:
 
 For example:
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   ...
@@ -413,7 +413,7 @@ The rules for creating DID are:
 
 For example:
 
-```json
+```json5
 {
   "header": {
     "specification": "elastos/did/1.0",
@@ -430,7 +430,7 @@ For example:
 
 The payload is the result of the following DID document encoded by Base64 URL:
 
-```json
+```json5
 {
     "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
     "publicKey": [{
@@ -465,7 +465,7 @@ The rules for DID updates are as follows:
 
 For example:
 
-```json
+```json5
 {
   "header": {
     "specification": "elastos/did/1.0",
@@ -494,7 +494,7 @@ The rules for deactivating a DID are:
 
 For example:
 
-```json
+```json5
 {
   "header": {
     "specification": "elastos/did/1.0",
@@ -542,7 +542,7 @@ Privacy and self-sovereignty are the basic principles of the DID design, and the
 
 ### The simplest possible DID Document
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
   "publicKey": [{
@@ -561,7 +561,7 @@ This DID document contains a public key by default, and is the public key that c
 
 ### A Complex/Redundant DID Document
 
-```json
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
 

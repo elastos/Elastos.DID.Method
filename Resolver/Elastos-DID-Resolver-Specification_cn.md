@@ -121,7 +121,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -134,7 +134,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -166,7 +166,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -179,7 +179,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -211,7 +211,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -224,7 +224,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -254,7 +254,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -267,7 +267,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -282,7 +282,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -295,7 +295,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -358,7 +358,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
     "method": "resolvedid",
     "params":{
@@ -371,7 +371,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -470,7 +470,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
     "method": "query",
     "params":{
@@ -484,7 +484,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -557,7 +557,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
     "method": "query",
     "params":{
@@ -569,7 +569,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -642,7 +642,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### MongoDB's find condition
 
-```json
+```json5
 {
     "credential": {
         "type": ["SelfProclaimedCredential"],
@@ -655,7 +655,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
   	"method": "query",
     "params":{
@@ -669,7 +669,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -742,7 +742,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
     "method": "query",
     "params":{
@@ -754,7 +754,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
@@ -771,7 +771,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Request
 
-```json
+```json5
 {
     "method": "query",
     "params":{
@@ -784,7 +784,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ##### Response
 
-```json
+```json5
 {
   "id": "8555cbd1afbf3b8fd8748464ee949574",
   "jsonrpc": "2.0",
