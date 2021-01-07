@@ -66,7 +66,7 @@ DID相关的操作行为由DID主题持有者通过DID客户端发起交易来�
 did                = "did:" method ":" specific-idstring ;
 method             = "elastos"
 specific-idstring  = idstring *( ":" idstring ) ;
-idstring           = BASE58 ;
+idstring           = BASE58 / 1*idchar ;
 
 did-url            = did [ "/" did-path ] [ "#" did-fragment ] ;
 did-path           = path-rootless ;
@@ -75,6 +75,7 @@ segment            = *pchar ;
 segment-nz         = 1*pchar ;
 did-fragment       = fragment ;
 fragment           = *( pchar / "/" / "?" ) ;
+idchar             = unreserved / pct-encoded ;
 pchar              = unreserved / pct-encoded / sub-delims / ":" / "@" ;
 
 unreserved         = ALPHA / DIGIT / "-" / "." / "_" / "~" ;
@@ -111,14 +112,16 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 例如：
 
-```json5
 标准DID：
+```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN"
 }
+```
 自定义DID：
+```json5
 {
-  "id": "did:elastos:trinity"
+  "id": "did:elastos:example"
 }
 ```
 
@@ -129,21 +132,31 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 持有者的规则是：
 
 - 自定义DID必须包含一个`controller`属性。
-- `controller`属性的值必须是标准DID数组。
+- `controller`属性的值必须是DID字符串或者DID数组。
 
 持有者属性至少包含一个标准DID实体；多个持有者之间功能相等，无主次无优先。
 
 例如：
 
+多持有者DID
 ```json5
 {
-  "id": "did:elastos:trinity",
+  "id": "did:elastos:example",
   "controller": [
         "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
         "did:elastos:ijSM3fffVzAtAWM4DSypiFBY2mZSmN7JPv",
         "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB"
    ],
    "multisig": "2:3",
+  ...
+}
+```
+单持有者DID
+
+```json5
+{
+  "id": "did:elastos:example",
+  "controller": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
   ...
 }
 ```
@@ -154,14 +167,14 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 多重签名的规则是：
 
-- 自定义DID在多持有者（非单持有者）情况下，必须包含多重签名。
+- 自定义DID在多持有者情况下，必须包含多重签名。
 - `multisig`属性的值是基本格式为"m/n"的字符串，其中n为持有者个数（n > 1)，m为多重签名者个数（m <= n)。
 
 例如：
 
 ```json5
 {
-  "id": "did:elastos:trinity",
+  "id": "did:elastos:example",
   "controller": [
         "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
         "did:elastos:ijSM3fffVzAtAWM4DSypiFBY2mZSmN7JPv",
@@ -187,7 +200,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 - 每个公钥可以包含一个`controller`属性，表示相应私钥控制者的DID；默认为所在文档的DID，这种情况可省略该属性。
 - 每个公钥必须包含一个`publicKeyBase58` 属性，用于存放Base58编码的公钥。
 
-亦来云标准DID文档中至少需要包含一个主公钥（default key），主公钥的URI片段为primary。
+亦来云标准DID文档中至少需要包含一个主公钥（default key）。
 
 例如：
 
@@ -219,9 +232,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 身份验证的规则是：
 
 - 标准DID文档必须包含且最多一个`authentication`属性；自定义DID文档可以不包含该属性。
-
 - `authentication`属性的值是一个验证方法数组，即可用于身份验证的公钥数组。
-
 - 可以嵌入或引用验证方法。 在引用时是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#primary`和`#primary`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥/Public Keys)一致。
 - 标准DID文档的authentication数组至少有一个公钥，即为主公钥。
 
@@ -251,13 +262,12 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 授权是用于说明如何代表DID主题执行操作的机制。 委托是指DID主题可以授权他人代表他们行事的机制。 这对于DID密钥丢失情况下的DID安全善后事宜尤其重要，当主体不再能够访问其密钥或密钥泄露时，DID持有者授权的可信第三方可以声明停用该DID，从而禁止在密钥泄露的情况下导致的一些恶意行为。
 
-亦来云DID的授权和委托包含停用DID和支持DID公钥轮换。
+亦来云DID的授权和委托仅支持必要的最小授权，即授权可信第三方用于停用目标DID，不支持其它操作。
 
 授权和委托的规则是：
 
 - 标准DID文档可以包含最多一个`authorization`属性；自定义DID文档不可包含该属性，其有持有者来实现该功能。
 - `authorization`属性的值应该是一个验证方法数组，即可用于委托的公钥数组。
-
 - 可以嵌入或引用每种验证方法。 在引用时可以是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#recovery-key`和`#recovery-key`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥public-keys)一致。
 
 ```json5
@@ -354,7 +364,6 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 除了发布身份验证和授权机制之外，DID文档的另一个主要目的是发布DID主题对应的服务端点 。服务端点可以表示主体希望通告的任何类型的服务，包括用于进一步发现，认证，授权或交互的分散身份管理服务。
 
 服务端点的规则是：
-
 - DID文档可以包含最多一个`service`属性。
 - `service`属性的值应该是服务端点的数组。
 - 每个服务端点必须包含`id` ， `type`和`serviceEndpoint`属性，并且可以包含其他应用自定义的属性。
@@ -399,10 +408,10 @@ DID文档的Proof属性是用来对DID文档的完整性提供加密证明的信
 Proof的规则是：
 
 - DID文档必须包含最多一个`proof`属性。
-- `proof`属性的值是多个签名的数组。
-- 每个proof必须包含`creator`和`signatureValue`属性。
+- `proof`属性的值是单个签名或者多个签名的数组。
+- 每个proof必须包含`created`，`creator`和`signatureValue`属性。
 - `type`默认是`ECDSAsecp256r1`，可以省略。
-- `created`表示签名创建时间，可以省略。
+- `created`表示签名创建时间。
 - `creator`表示验证签名的密钥引用。
 - `signatureValue`表示签名的值，使用Base64URL编码。
 
@@ -413,6 +422,7 @@ Proof的规则是：
   ...
   "proof": {
     "type": "ECDSAsecp256r1",
+    "created": "2020-01-01T19:23:24Z",    
     "creator": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#primary",
     "signatureValue": "QNB13Y7Q9...1tzjn4w"
   }
@@ -421,7 +431,7 @@ Proof的规则是：
 自定义多持有者DID文档如下：
 ```json5
 {
-    "id": "did:elastos:trinity",
+    "id": "did:elastos:example",
     "controller": [
         "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
         "did:elastos:ijSM3fffVzAtAWM4DSypiFBY2mZSmN7JPv",
@@ -480,7 +490,7 @@ Proof的规则是：
 DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操作JSON文档的属性定义如下：
 
 - 必须包含一个`header`属性，该属性包含DID操作的基本信息。`header`的属性定义如下：
-  - 必须包含一个`specification`属性，表示DID操作所符合的规范和版本，该规范支持`elastos/did/2.0`。
+  - 必须包含一个`specification`属性，表示DID操作所符合的规范和版本，该规范支持`elastos/did/1.0`。
   - 必须包含一个`operation`属性，用来说明执行何种操作，属性值参见具体操作。
   - 根据操作需要，可以包含一个`previousTxid`属性。属性定义参见具体操作。
   - 根据操作需要，可以包含一个`ticket`属性。属性定义参见具体操作。
@@ -507,7 +517,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 ```json5
 {
   "header": {
-    "specification": "elastos/did/2.0",
+    "specification": "elastos/did/1.0",
     "operation": "create"
   },
   "payload": "ICAiZG9jIjogewogICAgImlkIjogImRpZDplbGFzdG9zOmljSjR6MkRVTHJIRXpZU3ZqS05KcEt5aHFGRHh2WVY3cE4iLAogICAgInB1YmxpY0tleSI6IFt7CiAgICAgICJpZCI6ICIjbWFzdGVyLWtleSIsCiAgICAgICJwdWJsaWNLZXlCYXNlNTgiOiAiek54b1phWkxkYWNrWlFOTWFzN3NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3anlZWGJ4Tm9wWFZ1ZnRCZSIKICAgIH0sIHsKICAgICAgImlkIjogIiNyZWNvdmVyeS1rZXkiLAogICAgICAiY29udHJvbGxlciI6ICJkaWQ6ZWxhc3RvczppcDdudERvMm1ldEduVTh3R1A0Rm55S0NVZGJIbTRCUERoIiwKICAgICAgInB1YmxpY0tleUJhc2U1OCI6ICJ6cHB5MzNpMnIzdUMxTFQzUkZjTHFKSlBGcFl1WlBEdUtNZUtaNVRkQXNrTSIKICAgIH1dLAogICAgImF1dGhlbnRpY2F0aW9uIjogWwogICAgICAibWFzdGVyLWtleXMiLAogICAgICAiI2tleS0yIiwKICAgIF0sCiAgICAuLi4KICB9LA",
@@ -545,7 +555,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 
 ### 更新/Update DID
 
-DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID，更换持有者不属于更新操作。非DID主题持有者发起的更新DID交易都会被DID解析器过滤并丢弃，不对目标DID产生任何影响。更新DID时不支持增量更新，需要在更新交易中附加完整的DID文档。
+DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID，更换持有者不属于更新操作。非DID主题持有者发起的更新DID交易都会被ID测链丢弃，不对目标DID产生任何影响。更新DID时不支持增量更新，需要在更新交易中附加完整的DID文档。
 
 更新DID的规则是：
 
@@ -559,7 +569,7 @@ DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID�
 ```json5
 {
   "header": {
-    "specification": "elastos/did/2.0",
+    "specification": "elastos/did/1.0",
     "operation": "update",
     "previousTxid": "3641de55f368583c...8917756a872093d2"
   },
@@ -571,43 +581,44 @@ DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID�
 }
 ```
 
-### 持有权转移/Transfer DID
+### 所有权转移/Transfer DID
 
-自定义DID支持添加或者删除持有者（自定义DID必须包含一个持有者），当自定义DID文档发生持有者更改，就需要通过持有权转移交易来完成文档上链操作。
+自定义DID支持添加或者删除持有者（自定义DID必须包含一个持有者），当自定义DID文档发生持有者更改，就需要通过所有权转移交易来完成文档上链操作。
 
-更改持有者是较为谨慎和严谨的操作，鉴于此特性，该交易必须同时基于修改后的文档和持有权转移认证单ticket，使用DID原持有者主密钥对来完成该交易。其中持有权转移认证单的内容为DID主题，认证单的接收者和前一个DID文档操作的交易ID，认证单需要原持有者根据多重签名规则共同签名完成，以表示原持有者对更换持有者的认可。
+更改持有者是较为谨慎和严谨的操作，鉴于此特性，该交易必须同时基于修改后的文档和转移凭证（ticket），使用DID原持有者主密钥对来完成该交易。其中转移凭证的内容为DID主题，认证单的接收者和前一个DID文档操作的交易ID，认证单需要原持有者根据多重签名规则共同签名完成，以表示原持有者对更换持有者的认可。
 
-持有权转移认证单ticket的规则是：
-- 必须包含一个`did`属性，表示更换持有者的主体。
-- 必须包含一个`to`属性，表示认证单的接收者，必须为更改后的持有者之一。
+转移凭证ticket的规则是：
+- 必须包含`did`属性，表示更换持有者的主体。
+- 必须包含`to`属性，表示转移凭证的接收者，必须为更改后的持有者之一。
 - 必须包含`txid`属性，值是前一个DID文档操作的交易ID。
-- 必须包含`proof`属性，值是多个签名的数组。
+- 必须包含`proof`属性，值是单一签名或者多个签名的数组。
 - 每个proof必须包含`creator`和`signatureValue`属性。
-- `type`默认是`ECDSAsecp256r1`，可以省略。
-- `created`表示签名创建时间，可以省略。
+- `type`默认是`created`，`ECDSAsecp256r1`，可以省略。
+- `created`表示签名创建时间。
 - `creator`表示持有者主密钥引用。
 - `signatureValue`表示签名的值，使用Base64URL编码。
 
-持有权转移认证单采用Base64URL模式编码方式加入交易内容。
+转移凭证采用Base64URL模式编码方式加入交易内容。
 
-持有权转移的规则是：
+所有权转移的规则是：
 
-- 必须包含一个`header`属性，其中`operation`属性值是`transfer`，表示持有权转移。
-- 必须包含一个`tikcet`属性，值为持有权转移认证单的Base64URL编码内容。
+- 必须包含`header`属性，其中`operation`属性值是`transfer`，表示所有权转移。
+- `header`必须包含`tikcet`属性，值为转移凭证的Base64URL编码内容。
 - 必须包含`payload`属性，值是更改持有者后的新DID文档。
 - 必须包含一个`proof`属性，包含公钥引用和签名，用于证明该操作是DID本身或者DID持有者发起。
 
 例如：
 
-```json
+```json5
 {
   "header": {
-    "specification": "elastos/did/2.0",
+    "specification": "elastos/did/1.0",
     "operation": "transfer",
     "ticket": "NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3"
   },
   "payload": "ICAiZG9jIjogewogICAgImlkIjogImRpZDplbGFzdG9zOmljSjR6MkRVTHJIRXpZU3ZqS05KcEt5aHFGRHh2WVY3cE4iLAogICAgInB1YmxpY0tleSI6IFt7CiAgICAgICJpZCI6ICIjbWFzdGVyLWtleSIsCiAgICAgICJwdWJsaWNLZXlCYXNlNTgiOiAiek54b1phWkxkYWNrWlFOTWFzN3NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3anlZWGJ4Tm9wWFZ1ZnRCZSIKICAgIH0sIHsKICAgICAgImlkIjogIiNyZWNvdmVyeS1rZXkiLAogICAgICAiY29udHJvbGxlciI6ICJkaWQ6ZWxhc3RvczppcDdudERvMm1ldEduVTh3R1A0Rm55S0NVZGJIbTRCUERoIiwKICAgICAgInB1YmxpY0tleUJhc2U1OCI6ICJ6cHB5MzNpMnIzdUMxTFQzUkZjTHFKSlBGcFl1WlBEdUtNZUtaNVRkQXNrTSIKICAgIH1dLAogICAgImF1dGhlbnRpY2F0aW9uIjogWwogICAgICAibWFzdGVyLWtleXMiLAogICAgICAiI2tleS0yIiwKICAgIF0sCiAgICAuLi4KICB9LA",
   "proof": {
+    "created": "2025-12-09T23:13:57Z",
     "verificationMethod": "#proof-key",
     "signature": "dkODxARE...hMUFRY="
   }
@@ -631,7 +642,7 @@ DID所有者或者持有者可以主动停用DID，比如标准DID所有者或�
 ```json5
 {
   "header": {
-    "specification": "elastos/did/2.0",
+    "specification": "elastos/did/1.0",
     "operation": "deactivate"
   },
   "payload": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
@@ -802,7 +813,7 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
 
 ```json5
 {
-  "id": "did:elastos:trinity",
+  "id": "did:elastos:example",
   "controller": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
   "expires": "2025-10-12T05:50:59Z",
   "proof": {
