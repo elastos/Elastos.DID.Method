@@ -177,37 +177,37 @@
 
 ### Verifiable Credentials操作
 
-对于Verifiable Credential操作，亦来云仅支持Verifiable Credential上传和撤销操作，相关的操作都需要在支持ID侧链的客户端中操作，并且需要使用 Verifiable Credentials所有者发起交易来实现。
+对于Verifiable Credential操作，亦来云支持Verifiable Credential声明和撤销操作。相关操作都通过在支持ID侧链的客户端中发起相关交易来实现，其中声明操作只能是Verifiable Credentials所有者发起，撤销操作只有通过Verifiable Credentials所有者或者颁发者发起才为有效。
 
 Verifiable Credential操作和DID操作类似，对应的凭证采用JSON格式保存在交易的payload中。Verifiable Credential操作JSON文档的属性定义如下：
 
 - 必须包含一个`header`属性，该属性包含DID操作的基本信息。`header`的属性定义如下：
-  - 必须包含一个`specification`属性，表示Verifiable Credential操作所符合的规范和版本，该规范支持`elastos/vc/2.0`。
+  - 必须包含一个`specification`属性，表示Verifiable Credential操作所符合的规范和版本，该规范支持`elastos/credential/2.0`。
   - 必须包含一个`operation`属性，用来说明执行何种操作，属性值参见具体操作。
 - 必须包含一个`payload`属性，属性值是操作的Verifiable Credential。
-- 必须包含一个`proof`属性，该属性包含DID持有者操作DID的公钥和签名，用于证明是持有者本人操作。`proof`属性定义如下：
+- 必须包含一个`proof`属性，该属性包含交易发起者的公钥和签名。`proof`属性定义如下：
   - `type`默认是`ECDSAsecp256r1`，可以省略。
-  - `verificationMethod`表示证明方法，值是颁发者DID文档中用于签名和验证的公钥引用。
+  - `verificationMethod`表示证明方法，值是交易发起者用于签名和验证的公钥引用。
   - `signature`表示签名的值，使用Base64URL编码。
 
 
-### 上传/Upload Verifiable Credential
+### 声明/Declare Credential
 
-上传Verifiable Credential需要DID客户端根据持有人拥有的密钥对，通过该公钥对上传Verifiable Credential进行认证，其它的属性由应用或者用户根据需求填写。
+没有被声明过或者没有被凭证所有者或者颁发者撤销过的凭证都可以被声明。同一个凭证只有一次声明操作。声明Credential需要DID客户端根据凭证所有者拥有的密钥对，通过该公钥对Credential进行认证，其它的属性由应用或者用户根据需求填写。
 
-上传Verifiable Credential的规则是：
+声明Credential的规则是：
 
-- 必须包含一个`header`属性，其中`operation`属性值是`upload`，表示上传Verifiable Credential。
-- 必须包含`payload`属性，值是Verifiable Credential采用Base64URL模式编码的文档。
-- 必须包含一个`proof`属性，包含DID所有者的公钥引用和签名，用于证明该操作是DID持有者发起。
+- 必须包含一个`header`属性，其中`operation`属性值是`declare`，表示声明Verifiable Credential。
+- 必须包含`payload`属性，值是Verifiable Credential采用Base64URL模式编码的凭证。
+- 必须包含一个`proof`属性，包含凭证所有者的公钥引用和签名，用于证明该操作是凭证所有者发起。
 
 例如：
 
 ```json
 {
   "header": {
-    "specification": "elastos/vc/2.0",
-    "operation": "upload"
+    "specification": "elastos/credential/2.0",
+    "operation": "declare"
   },
   "payload": "ICAiZG9jIjogewogICAgImlkIjogImRpZDplbGFzdG9zOmljSjR6MkRVTHJIRXpZU3ZqS05KcEt5aHFGRHh2WVY3cE4iLAogICAgInB1YmxpY0tleSI6IFt7CiAgICAgICJpZCI6ICIjbWFzdGVyLWtleSIsCiAgICAgICJwdWJsaWNLZXlCYXNlNTgiOiAiek54b1phWkxkYWNrWlFOTWFzN3NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3anlZWGJ4Tm9wWFZ1ZnRCZSIKICAgIH0sIHsKICAgICAgImlkIjogIiNyZWNvdmVyeS1rZXkiLAogICAgICAiY29udHJvbGxlciI6ICJkaWQ6ZWxhc3RvczppcDdudERvMm1ldEduVTh3R1A0Rm55S0NVZGJIbTRCUERoIiwKICAgICAgInB1YmxpY0tleUJhc2U1OCI6ICJ6cHB5MzNpMnIzdUMxTFQzUkZjTHFKSlBGcFl1WlBEdUtNZUtaNVRkQXNrTSIKICAgIH1dLAogICAgImF1dGhlbnRpY2F0aW9uIjogWwogICAgICAibWFzdGVyLWtleXMiLAogICAgICAiI2tleS0yIiwKICAgIF0sCiAgICAuLi4KICB9LA",
   "proof": {
@@ -239,23 +239,23 @@ Verifiable Credential操作和DID操作类似，对应的凭证采用JSON格式�
 }
 ```
 
-### 撤销/Repeal Verifiable Credential
+### 撤销/Revoke Credential
 
-上传Verifiable Credential需要DID客户端根据持有人拥有的密钥对，通过该公钥对上传Verifiable Credential进行认证，其它的属性由应用或者用户根据需求填写。
+凭证无论是否被声明过，都可以被撤销，但是如果已经被凭证所有者或者颁发者撤销的凭证无法再次被撤销。撤销Verifiable Credential需要DID客户端根据凭证所有者或者凭证颁发者的密钥对，通过该公钥对上传Credential进行认证，其它的属性由应用或者用户根据需求填写。
 
-创建DID的规则是：
+撤销credential的规则是：
 
-- 必须包含一个`header`属性，其中`operation`属性值是`repeal`，表示撤销Verifiable Credential。
+- 必须包含一个`header`属性，其中`operation`属性值是`revoke`，表示撤销credential。
 - 必须包含`payload`属性，值是Verifiable Credential的id值。
-- 必须包含一个`proof`属性，包含DID所有者的公钥引用和签名，用于证明该操作是DID持有者发起。
+- 必须包含一个`proof`属性，包含凭证所有者或者凭证颁发者公钥引用和签名。
 
 例如：
 
 ```json
 {
   "header": {
-    "specification": "elastos/vc/2.0",
-    "operation": "repeal"
+    "specification": "elastos/credential/2.0",
+    "operation": "revoke"
   },
   "payload": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#email",
   "proof": {
@@ -265,28 +265,6 @@ Verifiable Credential操作和DID操作类似，对应的凭证采用JSON格式�
   }
 }
 ```
-
-其中payload是以下Verifiable Credential通过Base64URL编码后的结果：
-
-```json
-{
-  "id" : "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#email",
-  "type" : [ "BasicProfileCredential", "EmailCredential", "InternetAccountCredential" ],
-  "issuer" : "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
-  "issuanceDate" : "2020-01-03T06:08:20Z",
-  "expirationDate" : "2025-01-03T06:08:20Z",
-  "credentialSubject" : {
-    "id" : "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
-    "email" : "john@example.com"
-  },
-  "proof" : {
-    "type" : "ECDSAsecp256r1",
-    "verificationMethod" : "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
-    "signature" : "uNqJdVuU279eLyaa400nKGxwHTkRZ1bWKiy9Ro-DXwc92rS-qP24dMiLkijfh1hS1YEwCOUXzbRpFXhwg5dv9g"
-  }
-}
-```
-
 ### 可验证表达/Verifiable Presentations
 
 隐私设计是DID和可验证声明的重要目标，所以实体能够在不同的场景中针对验证方的需求和自身的角色而提供一个最小的、必须的个人凭证信息是很重要的。可验证表达是指包含实体可验证凭证子集及副署签名(countersign)的数据集合，用于对第三方表明自身身份。
