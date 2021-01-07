@@ -66,7 +66,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 #### result
 
-如果Resolve执行成功，则包含此成员，值为resolve的结果对象。如果调用resolve时出错，则该成员不存在或者为null。DID Resolver解析结果对象的定义参考[Resolve result object](#did-resolve-result-object)。
+如果Resolve执行成功，则包含此成员，值为resolve的结果对象。如果调用resolve时出错，则该成员不存在或者为null。DID Resolver解析结果对象的定义参考[DID Resolve result object](#did-resolve-result-object)。
 
 #### error
 
@@ -146,7 +146,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
       "timestamp": "2019-08-10T17:30:00Z",
       "operation": {
         "header": {
-          "specification": "elastos/did/2.0",
+          "specification": "elastos/did/1.0",
           "operation": "update",
           "previousTxid": "3641de55f368583c...8917756a872093d2"
         },
@@ -190,7 +190,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
       "timestamp": "2019-11-10T21:30:00Z",
       "operation": {
         "header": {
-          "specification": "elastos/did/2.0",
+          "specification": "elastos/did/1.0",
           "operation": "deactivate"
         },
         "payload": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
@@ -204,7 +204,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
       "timestamp": "2019-08-10T17:30:00Z",
       "operation": {
         "header": {
-          "specification": "elastos/did/2.0",
+          "specification": "elastos/did/1.0",
           "operation": "update",
           "previousTxid": "3641de55f368583c...8917756a872093d2"
         },
@@ -276,7 +276,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
       "timestamp": "2019-12-1T17:30:00Z",
       "operation": {
         "header": {
-          "specification": "elastos/did/2.0",
+          "specification": "elastos/did/1.0",
           "operation": "update",
           "previousTxid": "3641de55f368583c...8917756a872093d2"
         },
@@ -292,7 +292,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
       "timestamp": "2019-10-18T10:30:00Z",
       "operation": {
         "header": {
-          "specification": "elastos/did/2.0",
+          "specification": "elastos/did/1.0",
           "operation": "update",
           "previousTxid": "3a2936c4777f02a9...3f683c82a1aa378c"
         },
@@ -308,7 +308,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
       "timestamp": "2019-08-10T17:30:00Z",
       "operation": {
         "header": {
-          "specification": "elastos/did/2.0",
+          "specification": "elastos/did/1.0",
           "operation": "create"
         },
         "payload": "NLZXkiOlt7ImlkIjoiI3ByaW1hcnkiLC...JwdWJsaWNLZXlCYX",
@@ -784,7 +784,7 @@ Credential Resolve 是用来解析特定Credenial的方法。
 
 - issuer
 
-  可选，DID字符串，用于表明该credential的颁发者，主要用来查询是否存在由issuer撤销的有效交易。如果无该字段，解析结果不包含issuer撤销的交易。
+  可选，DID字符串，用于表明该credential的颁发者，主要用于第三方kyc凭证查询是否存在由issuer撤销的有效交易。如果无该字段，解析结果不包含issuer撤销的交易。
 
 #### id
 
@@ -798,7 +798,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 #### result
 
-如果Resolve执行成功，则包含此成员，值为resolve的结果对象。如果调用resolve时出错，则该成员不存在或者为null。Credential Resolver解析结果对象的定义参考[Resolve result object](#credential-resolve-result-object)。
+如果Resolve执行成功，则包含此成员，值为resolve的结果对象。如果调用resolve时出错，则该成员不存在或者为null。Credential Resolver解析结果对象的定义参考[Credential Resolve result object](#credential-resolve-result-object)。
 
 #### error
 
@@ -848,8 +848,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 resolve credential根据[resolve credential](#credential-resolve-request)请求的有无`issuer`参数和凭证的实际情况有以下几种解析结果：
 - 凭证未被进行过任何操作，无论请求是否有`issuer`参数，返回不存在状态，结果不包含任何交易。
 - 凭证仅被声明过，无论请求是否有`issuer`参数，返回已声明状态，结果包含一个声明交易。
-- 凭证被声明过，且被凭证所有者撤销，无论请求是否有`issuer`参数，返回已撤销状态，结果包含两个交易，一个是声明交易，另一个是所有者撤销的有效交易。
-- 凭证被声明过，且被凭着颁发者撤销，如果请求有`issuer`参数，返回已撤销状态，结果包含两个交易，一个是声明交易，另一个是颁发者撤销的有效交易；如果请求无`issuer`参数，返回已声明状态，结果仅包含一个声明交易。
+- 凭证被声明过，且被凭证所有者或者颁发者撤销，无论请求是否有`issuer`参数，返回已撤销状态，结果包含两个交易，一个是声明交易，另一个是所有者或者颁发者撤销的有效交易。
 - 凭证未被声明过，被所有者撤销，无论请求是否有`issuer`参数，返回已撤销状态，结果包含一个所有者撤销的有效交易。
 - 凭证未被声明过，被凭证颁发者撤销，如果请求有`issuer`参数，返回已撤销状态，结果包含一个颁发者撤销的有效交易；如果请求无`issuer`参数，返回不存在状态，结果不包含任何交易。
 
@@ -882,7 +881,7 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
       "timestamp": "2019-08-10T17:30:00Z",
       "operation": {
         "header": {
-          "specification": "elastos/credential/2.0",
+          "specification": "elastos/credential/1.0",
           "operation": "declare"
         },
         "payload": "eyJpZCI6ImRpZDplbGFzdG9zOmlWUGFk...UMDI6MDA6MDBaIn0",
@@ -926,7 +925,7 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
       "timestamp": "2019-11-10T21:30:00Z",
       "operation": {
         "header": {
-          "specification": "elastos/credential/2.0",
+          "specification": "elastos/credential/1.0",
           "operation": "revoke"
         },
         "payload": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
@@ -940,7 +939,7 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
       "timestamp": "2019-08-10T17:30:00Z",
       "operation": {
         "header": {
-          "specification": "elastos/credential/2.0",
+          "specification": "elastos/credential/1.0",
           "operation": "declare"
         },
         "payload": "eyJpZCI6ImRpZDplbGFzdG9zOmlWUGFk...UMDI6MDA6MDBaIn0",
@@ -985,7 +984,7 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
       "timestamp": "2019-11-10T21:30:00Z",
       "operation": {
         "header": {
-          "specification": "elastos/credential/2.0",
+          "specification": "elastos/credential/1.0",
           "operation": "revoke"
         },
         "payload": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
@@ -1027,9 +1026,6 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 }
 ```
 
-#### 解析凭证所有操作记录
-解析凭证本身就是返回所有交易，所以该操作返回结果同上。
-
 ## Credential List
 
 Credential List 是用来获取某个特定DID所有凭证的方法。
@@ -1070,7 +1066,7 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 #### result
 
-如果List执行成功，则包含此成员，值为list的结果对象。如果调用list时出错，则该成员不存在或者为null。Credential list解析结果对象的定义参考[Resolve result object](#list-result-object)。
+如果List执行成功，则包含此成员，值为list的结果对象。如果调用list时出错，则该成员不存在或者为null。Credential list解析结果对象的定义参考[List result object](#list-result-object)。
 
 #### error
 
