@@ -1,4 +1,4 @@
-# Elastos DID Method v0.2
+# Elastos DID Method v0.3
 
 This document is the Elastos DID Method Technical Specification. It is published and maintained by the Elastos Foundation. Its aim is to explain the general data model and format of Elastos DID, as well as related operations. In the future, Elastos Foundation will continue to upgrade this document so that it reflects the latest state of development of the Elastos DID technology.
 
