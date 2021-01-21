@@ -448,7 +448,7 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 {
     "method": "resolvecredential",
     "params":{
-        "id": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
+        "id": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
@@ -458,28 +458,29 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 
 ```json5
 {
-  "id": "8555cbd1afbf3b8fd8748464ee949574",
-  "jsonrpc": "2.0",
-  "result": {
-    "id": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
-    "status": 0,
-    "transaction": [{
-      "txid": "467491e6be79fbc6...ce9192d6f15ca81e",
-      "timestamp": "2019-08-10T17:30:00Z",
-      "operation": {
-        "header": {
-          "specification": "elastos/credential/1.0",
-          "operation": "declare"
-        },
-        "payload": "eyJpZCI6ImRpZDplbGFzdG9zOmlWUGFk...UMDI6MDA6MDBaIn0",
-        "proof": {
-          "type":"ECDSAsecp256r1",
-          "verificationMethod":"did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#primary",
-          "signature":"IdcfNkS7yA_GHL6g...6lWq7eI9OJGaNPbg"
-        }
-      }
-    }]
-  }
+   "id": "8555cbd1afbf3b8fd8748464ee949574",
+   "jsonrpc":"2.0",
+   "result":{
+      "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+      "status":0,
+      "transaction":[
+         {
+            "txid":"0fY6Fv74LOLX4oHlJZjcArySGzqklsJe",
+            "timestamp":"2021-01-21T02:32:46Z",
+            "operation":{
+               "header":{
+                  "specification":"elastos/credential/1.0",
+                  "operation":"declare"
+               },
+               "payload":"eyJpZCI6ImRpZDplbGFzdG9zOmlXRkFVWWhUYTM1YzFmUGUzaUNKdmloWkh4NnF1dW1ueW0ja3kxNGNjZDdSOXJlbmlhbCIsInR5cGUiOlsiQmFzaWNQcm9maWxlQ3JlZGVudGlhbCIsIlBob25lQ3JlZGVudGlhbCJdLCJpc3N1ZXIiOiJkaWQ6ZWxhc3RvczppcjMxY1paYkJRVUZicDRwTnBNUUFwa0F5Sjlkbm8zZnJCIiwiaXNzdWFuY2VEYXRlIjoiMjAyMS0wMS0yMVQwMTo0OToyNloiLCJleHBpcmF0aW9uRGF0ZSI6IjIwMjUtMDEtMDNUMDY6MDg6MTlaIiwiY3JlZGVudGlhbFN1YmplY3QiOnsiaWQiOiJkaWQ6ZWxhc3RvczppV0ZBVVloVGEzNWMxZlBlM2lDSnZpaFpIeDZxdXVtbnltIiwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwiZ2VuZGVyIjoiTWFsZSIsImxhbmd1YWdlIjoiRW5nbGlzaCIsIm5hbWUiOiJKb2huIiwibmF0aW9uIjoiU2luZ2Fwb3JlIiwicGhvbmUiOiIxMzI3ODA0NTYiLCJ0d2l0dGVyIjoiQGpvaG4ifSwicHJvb2YiOnsidHlwZSI6IkVDRFNBc2VjcDI1NnIxIiwidmVyaWZpY2F0aW9uTWV0aG9kIjoiZGlkOmVsYXN0b3M6aXIzMWNaWmJCUVVGYnA0cE5wTVFBcGtBeUo5ZG5vM2ZyQiNwcmltYXJ5Iiwic2lnbmF0dXJlIjoiZ1hLZFZ5RlpFTUZXbTB3TDkzYXYzdzF6eU9jbUg5dlBWekt6MDRBTFRWdHNBNGNyWEtwZ1RlUGlwV0s4UVBTc0NuU0U0LXdWQi1IXzRkQjI5eXlhencifX0",
+               "proof":{
+                  "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#primary",
+                  "signature":"Vy6dWyg-7HC4kGTL0A6feOkOjSzPAy0GQnlW5NjOTzyKOIPj0gedhfnlnoJY5Y0Be9gc2ucE9TpxMjtsWSutIg"
+               }
+            }
+         }
+      ]
+   }
 }
 ```
 #### 解析凭证，凭证被声明且被撤销
@@ -490,8 +491,8 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 {
     "method": "resolvecredential",
     "params":{
-        "id":"did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
-        "issuer": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+        "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+        "issuer": "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
 
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
@@ -502,41 +503,44 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 
 ```json5
 {
-  "id": "8555cbd1afbf3b8fd8748464ee949574",
-  "jsonrpc": "2.0",
-  "result": {
-    "id": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
-    "status": 2,
-    "transaction": [{
-      "txid": "467491e6be79fbc6...ce9192d6f15ca81e",
-      "timestamp": "2019-11-10T21:30:00Z",
-      "operation": {
-        "header": {
-          "specification": "elastos/credential/1.0",
-          "operation": "revoke"
-        },
-        "payload": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
-        "proof": {
-          "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#recovery",
-          "signature":"IdcfNkS7yA_GHL6g...6lWq7eI9OJGaNPbg"
-        }
-      }
-    }, {
-      "txid": "467491e6be79fbc6...ce9192d6f15ca81e",
-      "timestamp": "2019-08-10T17:30:00Z",
-      "operation": {
-        "header": {
-          "specification": "elastos/credential/1.0",
-          "operation": "declare"
-        },
-        "payload": "eyJpZCI6ImRpZDplbGFzdG9zOmlWUGFk...UMDI6MDA6MDBaIn0",
-        "proof": {
-          "verificationMethod":"#primary",
-          "signature":"IdcfNkS7yA_GHL6g...6lWq7eI9OJGaNPbg"
-        }
-      }
-    }]
-  }
+   "id": "8555cbd1afbf3b8fd8748464ee949574",
+   "jsonrpc":"2.0",
+   "result":{
+      "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+      "status":2,
+      "transaction":[
+         {
+            "txid":"Y4czWCdvrAB5Y965csuRP2649vor3G7Q",
+            "timestamp":"2021-01-21T02:32:46Z",
+            "operation":{
+               "header":{
+                  "specification":"elastos/credential/1.0",
+                  "operation":"revoke"
+               },
+               "payload":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+               "proof":{
+                  "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
+                  "signature":"Q5qvzkUdHwsfQwO9e-1u51R7m7xldEIOnmh-7Wp8avz3EVoQmBl1gTJpr1ZHO0DAU8HySmciJL-XbkkvIsyLGw"
+               }
+            }
+         },
+         {
+            "txid":"0fY6Fv74LOLX4oHlJZjcArySGzqklsJe",
+            "timestamp":"2021-01-21T02:32:46Z",
+            "operation":{
+               "header":{
+                  "specification":"elastos/credential/1.0",
+                  "operation":"declare"
+               },
+               "payload":"eyJpZCI6ImRpZDplbGFzdG9zOmlXRkFVWWhUYTM1YzFmUGUzaUNKdmloWkh4NnF1dW1ueW0ja3kxNGNjZDdSOXJlbmlhbCIsInR5cGUiOlsiQmFzaWNQcm9maWxlQ3JlZGVudGlhbCIsIlBob25lQ3JlZGVudGlhbCJdLCJpc3N1ZXIiOiJkaWQ6ZWxhc3RvczppcjMxY1paYkJRVUZicDRwTnBNUUFwa0F5Sjlkbm8zZnJCIiwiaXNzdWFuY2VEYXRlIjoiMjAyMS0wMS0yMVQwMTo0OToyNloiLCJleHBpcmF0aW9uRGF0ZSI6IjIwMjUtMDEtMDNUMDY6MDg6MTlaIiwiY3JlZGVudGlhbFN1YmplY3QiOnsiaWQiOiJkaWQ6ZWxhc3RvczppV0ZBVVloVGEzNWMxZlBlM2lDSnZpaFpIeDZxdXVtbnltIiwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwiZ2VuZGVyIjoiTWFsZSIsImxhbmd1YWdlIjoiRW5nbGlzaCIsIm5hbWUiOiJKb2huIiwibmF0aW9uIjoiU2luZ2Fwb3JlIiwicGhvbmUiOiIxMzI3ODA0NTYiLCJ0d2l0dGVyIjoiQGpvaG4ifSwicHJvb2YiOnsidHlwZSI6IkVDRFNBc2VjcDI1NnIxIiwidmVyaWZpY2F0aW9uTWV0aG9kIjoiZGlkOmVsYXN0b3M6aXIzMWNaWmJCUVVGYnA0cE5wTVFBcGtBeUo5ZG5vM2ZyQiNwcmltYXJ5Iiwic2lnbmF0dXJlIjoiZ1hLZFZ5RlpFTUZXbTB3TDkzYXYzdzF6eU9jbUg5dlBWekt6MDRBTFRWdHNBNGNyWEtwZ1RlUGlwV0s4UVBTc0NuU0U0LXdWQi1IXzRkQjI5eXlhencifX0",
+               "proof":{
+                  "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#primary",
+                  "signature":"Vy6dWyg-7HC4kGTL0A6feOkOjSzPAy0GQnlW5NjOTzyKOIPj0gedhfnlnoJY5Y0Be9gc2ucE9TpxMjtsWSutIg"
+               }
+            }
+         }
+      ]
+   }
 }
 ```
 
@@ -548,8 +552,8 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 {
     "method": "resolvecredential",
     "params":{
-        "id":"did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
-        "issuer": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+        "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+        "issuer": "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
 
     },
     "id": "8555cbd1afbf3b8fd8748464ee949574"
@@ -561,27 +565,30 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 
 ```json5
 {
-  "id": "8555cbd1afbf3b8fd8748464ee949574",
-  "jsonrpc": "2.0",
-  "result": {
-    "id": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
-    "status": 2,
-    "transaction": [{
-      "txid": "467491e6be79fbc6...ce9192d6f15ca81e",
-      "timestamp": "2019-11-10T21:30:00Z",
-      "operation": {
-        "header": {
-          "specification": "elastos/credential/1.0",
-          "operation": "revoke"
-        },
-        "payload": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
-        "proof": {
-          "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#recovery",
-          "signature":"IdcfNkS7yA_GHL6g...6lWq7eI9OJGaNPbg"
-        }
-      }
-    }]
-  }
+   "id": "8555cbd1afbf3b8fd8748464ee949574",
+   "jsonrpc":"2.0",
+   "result":{
+      "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+      "status":2,
+      "transaction":[
+         {
+            "txid":"0fY6Fv74LOLX4oHlJZjcArySGzqklsJe",
+            "timestamp":"2021-01-21T02:36:53Z",
+            "operation":{
+               "header":{
+                  "specification":"elastos/credential/1.0",
+                  "operation":"revoke"
+               },
+               "payload":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+               "proof":{
+                  "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
+                  "signature":"7cI82UAEgFvJUMtu0FA1Su5IKVfztR8JSHt6MGuFure6V9dAFwJf89ADdWqwxwOeUadXH4X-mRzVS_Qm3IRIBA"
+               }
+            }
+         }
+      ]
+   }
+}
 }
 ```
 
@@ -615,7 +622,7 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 
 ## Credential List
 
-Credential List 是用来获取某个特定DID所有凭证的方法。
+Credential List 是用来获取某个特定DID所有声明过的凭证的方法。
 
 ### List Request
 
