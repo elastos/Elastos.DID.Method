@@ -127,14 +127,14 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 #### 持有者/Controller（可选）
 
-持有者是一组标准DID实体，其本身至少具有最基本的认证属性，可代表DID实现签名和认证，可视为DID的委托者。目前，亦来云仅支持自定义DID包含持有者（标准DID不需要持有者），且持有者必须是标准DID实体。持有者可更改DID文档，支持DID上链等相关操作。
+持有者是一组标准DID，其本身至少具有最基本的认证属性，可代表DID实现签名和认证，可视为DID的被委托者。目前，亦来云仅支持自定义DID包含持有者（标准DID不需要持有者），且持有者必须是标准DID。持有者可更改DID文档，支持DID上链等相关操作。
 
 持有者的规则是：
 
 - 自定义DID必须包含一个`controller`属性。
 - `controller`属性的值必须是DID字符串或者DID数组。
 
-持有者属性至少包含一个标准DID实体；多个持有者之间功能相等，无主次无优先。
+持有者属性至少包含一个标准DID；多个持有者之间功能相等，无主次无优先。
 
 例如：
 
@@ -266,7 +266,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 授权和委托的规则是：
 
-- 标准DID文档可以包含最多一个`authorization`属性；自定义DID文档不可包含该属性，其有持有者来实现该功能。
+- 标准DID文档可以包含最多一个`authorization`属性；自定义DID文档不可包含该属性，其由持有者来实现该功能。
 - `authorization`属性的值应该是一个验证方法数组，即可用于委托的公钥数组。
 - 可以嵌入或引用每种验证方法。 在引用时可以是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#recovery-key`和`#recovery-key`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥public-keys)一致。
 
@@ -555,7 +555,7 @@ DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操
 
 ### 更新/Update DID
 
-DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID，更换持有者不属于更新操作。非DID主题持有者发起的更新DID交易都会被ID测链丢弃，不对目标DID产生任何影响。更新DID时不支持增量更新，需要在更新交易中附加完整的DID文档。
+DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID，更换持有者不属于更新操作。非DID主题持有者发起的更新DID交易都会被ID侧链丢弃，不对目标DID产生任何影响。更新DID时不支持增量更新，需要在更新交易中附加完整的DID文档。
 
 更新DID的规则是：
 
@@ -583,13 +583,13 @@ DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID�
 
 ### 所有权转移/Transfer DID
 
-自定义DID支持添加或者删除持有者（自定义DID必须包含一个持有者），当自定义DID文档发生持有者更改，就需要通过所有权转移交易来完成文档上链操作。
+自定义DID支持添加，删除持有者（自定义DID必须包含一个持有者）以及更改多重签名规则，当自定义DID文档发生持有者更改或者更改多重签名规则，就需要通过所有权转移交易来完成文档上链操作。
 
-更改持有者是较为谨慎和严谨的操作，鉴于此特性，该交易必须同时基于修改后的文档和转移凭证（ticket），使用DID原持有者主密钥对来完成该交易。其中转移凭证的内容为DID主题，认证单的接收者和前一个DID文档操作的交易ID，认证单需要原持有者根据多重签名规则共同签名完成，以表示原持有者对更换持有者的认可。
+更改持有者是较为谨慎和严谨的操作，鉴于此特性，该交易必须同时基于修改后的文档和转移凭证（ticket），使用DID原持有者主密钥对来完成该交易。其中转移凭证的内容为DID主题，转移凭证的接收者和前一个DID文档操作的交易ID，转移凭证需要原持有者根据多重签名规则共同签名完成，以表示原持有者对更换持有者的认可。
 
 转移凭证ticket的规则是：
 - 必须包含`did`属性，表示更换持有者的主体。
-- 必须包含`to`属性，表示转移凭证的接收者，必须为更改后的持有者之一。
+- 必须包含`to`属性，表示转移凭证的接收者，必须为更改后的持有者之一，且更改后的文档包含该接收者的签名。
 - 必须包含`txid`属性，值是前一个DID文档操作的交易ID。
 - 必须包含`proof`属性，值是单一签名或者多个签名的数组。
 - 每个proof必须包含`creator`和`signatureValue`属性。
@@ -597,6 +597,32 @@ DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID�
 - `created`表示签名创建时间。
 - `creator`表示持有者主密钥引用。
 - `signatureValue`表示签名的值，使用Base64URL编码。
+
+例如：
+
+```json5
+{
+	 "id":"did:elastos:littlefish",
+	 "to":"did:elastos:ijSM3fffVzAtAWM4DSypiFBY2mZSmN7JPv",
+	 "txid":"0fY6Fv74LOLX4oHlJZjcArySGzqklsJe",
+	 "proof":[{
+		 "type":"ECDSAsecp256r1",
+		 "created":"2021-01-20T07:16:38Z",
+		 "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#primary",
+		 "signatureValue":"02A7qf9mth6qjtlCC01LNrQK9pzxLwF16cOSIVU-YOWzgA9OaVwpPlDvzW68jKRdjLNg758ha69svrb_SrAhrA"
+	  },{
+		 "type":"ECDSAsecp256r1",
+		 "created":"2021-01-20T07:16:38Z",
+		 "verificationMethod":"did:elastos:ijSM3fffVzAtAWM4DSypiFBY2mZSmN7JPv#primary",
+		 "signatureValue":"1lR1zIwX7NAVVv1k-5vdGArl5XoQBAo-t91Km0ZSrnozuigulfel_ei_1PbpwvRwQvvZRfRtCn7fUNeGw2iKfg"
+	 }, {
+		 "type":"ECDSAsecp256r1",
+		 "created":"2021-01-20T07:16:38Z",
+		 "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
+		 "signatureValue":"TLBseQ6n5Qobg48vTWM03hS_PZv3nghRzPJMsGFqmueDcwf_YFlXBykKy8RLElE1F64crU2x04tinQWTWdb92A"
+	}]
+}
+```
 
 转移凭证采用Base64URL模式编码方式加入交易内容。
 
@@ -611,17 +637,16 @@ DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID�
 
 ```json5
 {
-  "header": {
-    "specification": "elastos/did/1.0",
-    "operation": "transfer",
-    "ticket": "NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3"
-  },
-  "payload": "ICAiZG9jIjogewogICAgImlkIjogImRpZDplbGFzdG9zOmljSjR6MkRVTHJIRXpZU3ZqS05KcEt5aHFGRHh2WVY3cE4iLAogICAgInB1YmxpY0tleSI6IFt7CiAgICAgICJpZCI6ICIjbWFzdGVyLWtleSIsCiAgICAgICJwdWJsaWNLZXlCYXNlNTgiOiAiek54b1phWkxkYWNrWlFOTWFzN3NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3anlZWGJ4Tm9wWFZ1ZnRCZSIKICAgIH0sIHsKICAgICAgImlkIjogIiNyZWNvdmVyeS1rZXkiLAogICAgICAiY29udHJvbGxlciI6ICJkaWQ6ZWxhc3RvczppcDdudERvMm1ldEduVTh3R1A0Rm55S0NVZGJIbTRCUERoIiwKICAgICAgInB1YmxpY0tleUJhc2U1OCI6ICJ6cHB5MzNpMnIzdUMxTFQzUkZjTHFKSlBGcFl1WlBEdUtNZUtaNVRkQXNrTSIKICAgIH1dLAogICAgImF1dGhlbnRpY2F0aW9uIjogWwogICAgICAibWFzdGVyLWtleXMiLAogICAgICAiI2tleS0yIiwKICAgIF0sCiAgICAuLi4KICB9LA",
-  "proof": {
-    "created": "2025-12-09T23:13:57Z",
-    "verificationMethod": "#proof-key",
-    "signature": "dkODxARE...hMUFRY="
-  }
+	"header":{
+		 "specification":"elastos/did/1.0",
+		 "operation":"transfer",
+		 "ticket":"eyJpZCI6ImRpZDplbGFzdG9zOmphY2siLCJ0byI6ImRpZDplbGFzdG9zOmlqU00zZmZmVnpBdEFXTTREU3lwaUZCWTJtWlNtTjdKUHYiLCJ0eGlkIjoiMGZZNkZ2NzRMT0xYNG9IbEpaamNBcnlTR3pxa2xzSmUiLCJwcm9vZiI6W3sidHlwZSI6IkVDRFNBc2VjcDI1NnIxIiwiY3JlYXRlZCI6IjIwMjEtMDEtMjBUMDc6MjY6MTFaIiwidmVyaWZpY2F0aW9uTWV0aG9kIjoiZGlkOmVsYXN0b3M6aVdGQVVZaFRhMzVjMWZQZTNpQ0p2aWhaSHg2cXV1bW55bSNwcmltYXJ5Iiwic2lnbmF0dXJlVmFsdWUiOiJUS3ExeHA2NUViNDJtRmVGSEc2M05RMDNHSGRnSkZqd3B3WUNmZHJtTDJCbUtpZGZKRDBIa1Njcll2QnAxbi1Zd2VlbnRBN3JTNzB0LXRmVmtmbG5PZyJ9LHsidHlwZSI6IkVDRFNBc2VjcDI1NnIxIiwiY3JlYXRlZCI6IjIwMjEtMDEtMjBUMDc6MjY6MTFaIiwidmVyaWZpY2F0aW9uTWV0aG9kIjoiZGlkOmVsYXN0b3M6aWpTTTNmZmZWekF0QVdNNERTeXBpRkJZMm1aU21ON0pQdiNwcmltYXJ5Iiwic2lnbmF0dXJlVmFsdWUiOiJpMWhyb1lQX1J3dkJGdzdLcWhLY2d0bDNNNVo3UmJ5T2JCMDRwcDdMb0tKcjBZTUNEcnFVQ0ExdTZaVnRaUUs0UGUzNVdfTXVacERqWm9jdEYzdTl4USJ9XX0"
+	 },
+    "payload":"eyJpZCI6ImRpZDplbGFzdG9zOmphY2siLCJjb250cm9sbGVyIjpbImRpZDplbGFzdG9zOmlqU00zZmZmVnpBdEFXTTREU3lwaUZCWTJtWlNtTjdKUHYiLCJkaWQ6ZWxhc3RvczppcjMxY1paYkJRVUZicDRwTnBNUUFwa0F5Sjlkbm8zZnJCIl0sIm11bHRpc2lnIjoiMjoyIiwicHVibGljS2V5IjpbeyJpZCI6ImRpZDplbGFzdG9zOmphY2sja2V5MSIsInR5cGUiOiJFQ0RTQXNlY3AyNTZyMSIsImNvbnRyb2xsZXIiOiJkaWQ6ZWxhc3RvczpqYWNrIiwicHVibGljS2V5QmFzZTU4IjoielNlUXlFTkQ3a0tRNDc0Y2FwcTU0bmtzeTRxaXV2S25zVm50aHhrTXpxOWIifSx7ImlkIjoiZGlkOmVsYXN0b3M6amFjayNrZXkyIiwidHlwZSI6IkVDRFNBc2VjcDI1NnIxIiwiY29udHJvbGxlciI6ImRpZDplbGFzdG9zOmphY2siLCJwdWJsaWNLZXlCYXNlNTgiOiJkbjJ6ZjNvajJMWEg5blZuVnRKRDNnbmRUc2NtNEVYcWZxeENrN256b0RvNiJ9XSwiYXV0aGVudGljYXRpb24iOlsiZGlkOmVsYXN0b3M6amFjayNrZXkxIiwiZGlkOmVsYXN0b3M6amFjayNrZXkyIl0sInZlcmlmaWFibGVDcmVkZW50aWFsIjpbeyJpZCI6ImRpZDplbGFzdG9zOmphY2sjY3JlZC0xIiwidHlwZSI6WyJCYXNpY1Byb2ZpbGVDcmVkZW50aWFsIiwiU2VsZkNsYWltZWRDcmVkZW50aWFsIl0sImlzc3VlciI6ImRpZDplbGFzdG9zOmphY2siLCJpc3N1YW5jZURhdGUiOiIyMDIxLTAxLTIwVDA3OjI2OjExWiIsImV4cGlyYXRpb25EYXRlIjoiMjAyNi0wMS0xOVQyMzoyNjoxMFoiLCJjcmVkZW50aWFsU3ViamVjdCI6eyJpZCI6ImRpZDplbGFzdG9zOmphY2siLCJuYW1lIjoiamFjayJ9LCJwcm9vZiI6eyJ0eXBlIjoiRUNEU0FzZWNwMjU2cjEiLCJ2ZXJpZmljYXRpb25NZXRob2QiOiJkaWQ6ZWxhc3RvczppalNNM2ZmZlZ6QXRBV000RFN5cGlGQlkybVpTbU43SlB2I3ByaW1hcnkiLCJzaWduYXR1cmUiOiJhN2hWOFNwWlUyeWVJSnhFUTZ1SkpsemM3Sm5YbFZtZHE0TzFLOXZDcUV1ZEs4WDRvM0tQYS11ZXl6bF8takVzQTJ4Sk8yQUNjeFVycUVZRHVERWNwUSJ9fV0sImV4cGlyZXMiOiIyMDI2LTAxLTE5VDIzOjI2OjEwWiIsInByb29mIjpbeyJ0eXBlIjoiRUNEU0FzZWNwMjU2cjEiLCJjcmVhdGVkIjoiMjAyMS0wMS0yMFQwNzoyNjoxMVoiLCJjcmVhdG9yIjoiZGlkOmVsYXN0b3M6aWpTTTNmZmZWekF0QVdNNERTeXBpRkJZMm1aU21ON0pQdiNwcmltYXJ5Iiwic2lnbmF0dXJlVmFsdWUiOiJ3LXdZazB0QVZtNm15ZVlwaGtyZ2l5MUI2Y042aGZiT2xLR1dsZ1g5aW42bEdma1BaUGVld1VZMVNhQXp2RUl3d1cyT3pVMWlmZ2xWbTRHeDBCc2lHQSJ9LHsidHlwZSI6IkVDRFNBc2VjcDI1NnIxIiwiY3JlYXRlZCI6IjIwMjEtMDEtMjBUMDc6MjY6MTFaIiwiY3JlYXRvciI6ImRpZDplbGFzdG9zOmlyMzFjWlpiQlFVRmJwNHBOcE1RQXBrQXlKOWRubzNmckIjcHJpbWFyeSIsInNpZ25hdHVyZVZhbHVlIjoicWU3SE5DclBXTW5IU0RybDh6bEJCNUNVczFRcXkwRWpFZzljZkdmODFaeXFmY25tTjd2YTE3QlNaZzlVLUVFY3NNMC1lUjladHUwWmxZNDZqcUV6MUEifV19",
+	"proof":{ 
+	    "verificationMethod":"did:elastos:ijSM3fffVzAtAWM4DSypiFBY2mZSmN7JPv#primary",  
+	    "signature":"TTRcnw7OvLIINbEqPswmS0govaKTzXwzzjN-te80MalWw0SIrvAMSMUIVE5SLt-O7zoVH-nm-pea3KaJA9dwOA"
+     }
 }
 ```
 

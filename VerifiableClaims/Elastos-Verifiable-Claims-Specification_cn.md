@@ -56,7 +56,7 @@
 
 #### 标识/id
 
-`id`是用来标记特定凭证的，应用或者使用者也可以通过标识来引用特定的凭证。`id`的值**必须**是单个符合[RFC3986的URI](https://tools.ietf.org/html/rfc3986)。凭证必须具有`id`属性。
+`id`是用来标记特定凭证的，具有唯一性，所以应用或者使用者可以通过标识来引用特定的凭证。标识中含有凭证所有者的DID信息。`id`的值**必须**是单个符合[RFC3986的URI](https://tools.ietf.org/html/rfc3986)。凭证必须具有`id`属性。
 
 #### 类型/type
 
@@ -80,7 +80,7 @@
 ```json5
 {
   // specify the identifier for the credential
-  "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-1",
+  "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#shi8YGA0378TEcdp",
   // the credential types, which declare what data to expect in the credential
   "type": ["SelfProclaimedCredential", "BasicProfileCredential"],
   ...
@@ -100,7 +100,7 @@
 ```json5
 {
   // specify the identifier for the credential
-  "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-2",
+  "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#shi8YGA0378TEcdp",
   // the credential types, which declare what data to expect in the credential
   "type": ["ElastosIDteriaCredential", "InternetAccountCredential", "PhoneCredential"],
   ...
@@ -211,62 +211,57 @@
 
 ```json5
 {
-  // specify the identifier for the credential
-  "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-1",
-  // the credential types, which declare what data to expect in the credential
-  "type": ["SelfProclaimedCredential", "BasicProfileCredential"],
-  // when the credential was issued
-  "issuanceDate": "2019-01-01T19:20:18Z",
-  "credentialSubject": {
-    "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
-    // assertion about the subject of the credential
-    "nickname": "woohah",
-    "nation": "Singapore",
-    "language": "English"
-  },
-  "proof": {
-    // the cryptographic signature suite that was used to generate the signature
-    "type": "ECDSAsecp256r1",
-    // the public key identifier that created the signature,
-    // DID subject can be omitted, keep the fragment only
-    "verificationMethod": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key",
-    "signature": "pYw8XNi1..Cky6Ed="
-  }
+   "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#m77Y9ycreUniRal9",
+   "type":[
+      "BasicProfileCredential",
+      "PhoneCredential",
+      "SelfProclaimedCredential"
+   ],
+   "issuer":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+   "issuanceDate":"2021-01-21T01:49:26Z",
+   "expirationDate":"2025-01-03T06:08:19Z",
+   "credentialSubject":{
+      "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+      "email":"john@example.com",
+      "gender":"Male",
+      "language":"English",
+      "name":"John",
+      "nation":"Singapore",
+      "phone":"132780456",
+      "twitter":"@john"
+   },
+   "proof":{
+      "type":"ECDSAsecp256r1",
+      "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#primary",
+      "signature":"edqzep-Q83SoMnCJ2vkIBj7gPYB4jdcLEhC41r5iCQHKFvCv6oOdrhk-58khTtnN0lgfd_J2WAONd7FvgLLoyw"
+   }
 }
 ```
 
 #### 第三方颁发的可验证凭证
 
 ```json5
-{
-  // specify the identifier for the credential
-  "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-2",
-  // the credential types, which declare what data to expect in the credential
-  "type": ["ElastosIDteriaCredential", "InternetAccountCredential", ...],
-  // the entity that issued the credential
-  "issuer": "did:elastos:iY3PF8u1bYMujq6Z4bk2iAnmRFyD1cqbSw",
-  // when the credential was issued
-  "issuanceDate": "2019-01-01T19:20:18Z",
-  // when the credential will expire
-  "expirationDate": "2020-01-01T19:23:24Z",
-  // claims about the subject of the credential
-  "credentialSubject": {
-    "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
-    "email": "woohah@example.com",
-    "phone": "+16693553638",
-    "googleAccount": "woohah@gmail.com",
-    "twitter": "@woohah"
-  },
-  // digital proof that makes the credential tamper-evident
-  "proof": {
-    // the cryptographic signature suite that was used to generate the signature
-    "type": "ECDSAsecp256r1",
-    // the public key identifier that created the signature,
-    // DID subject can be omitted, keep the fragment only
-    "verificationMethod": "did:elastos:iY3PF8u1bYMujq6Z4bk2iAnmRFyD1cqbSw#sign-key",
-    // the digital signature value
-    "signature": "BavEll0a...W3JT24="
-  }
+{   
+   "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+   "type":["BasicProfileCredential","PhoneCredential"],
+   "issuer":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
+   "issuanceDate":"2021-01-20T15:38:09Z",
+   "expirationDate":"2025-01-03T06:08:19Z",
+   "credentialSubject":{
+      "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+      "email":"john@example.com",
+      "gender":"Male",
+      "language":"English",
+      "name":"John",
+      "nation":"Singapore",
+      "phone":"132780456",
+      "twitter":"@john"
+   },
+   "proof":{
+      "type":"ECDSAsecp256r1",
+       "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
+      "signature":"STFyic4eFViVABO41jHl4U6ZsiO146JU7yQH2Ejs9CVMsSjF4BydKhR6TOJntRywsGj8ZWH7VHvPS3NsqST5lw"
+   }
 }
 ```
 
@@ -274,41 +269,65 @@
 
 ```json5
 {
-  "type": "VerifiablePresentation",
-  "created": "2019-01-10T21:19:10Z",
-
-  // the verifiable credential issued in the previous example
-  "verifiableCredential": [{
-    "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#crdential-2",
-    "type": ["ElastosIDteriaCredential", "InternetAccountCredential", ...],
-    "issuer": "did:elastos:iY3PF8u1bYMujq6Z4bk2iAnmRFyD1cqbSw",
-    "issuanceDate": "2019-01-01T19:20:18Z",
-    "expirationDate": "2020-01-01T19:23:24Z",
-    "credentialSubject": {
-      "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
-      "email": "woohah@example.com",
-      "phone": "+16693553638",
-      "googleAccount": "woohah@gmail.com",
-      "twitter": "@woohah"
-    },
-    "proof": {
-      "type": "ECDSAsecp256r1",
-      // Omitted the DID subject, default is issuer's DID.
-      // Equals: did:elastos:iY3PF8u1bYMujq6Z4bk2iAnmRFyD1cqbSw#sign-key
-      "verificationMethod": "#sign-key",
-      "signature": "BavEll0...W3JT24="
-    }
-  }],
-
-  "proof": {
-    "type": "ECDSAsecp256r1",
-    // DID subject can be omitted.
-    "verificationMethod": "did:example:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#keys-1",
-    // 'nonce' and 'realm' protect against replay attacks
-    "nonce": "6c573d7abe8720b5a659671335788a6f",
-    "realm": "example.com",
-    "signature": "eyJhbGci...AnKb78="
-  }
+   "type":"VerifiablePresentation",
+   "created":"2021-01-21T01:57:35Z",
+   "verifiableCredential":[
+      {
+         "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+         "type":["BasicProfileCredential","PhoneCredential"],
+         "issuer":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
+         "issuanceDate":"2021-01-21T01:49:26Z",
+         "expirationDate":"2025-01-03T06:08:19Z",
+         "credentialSubject":{
+            "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+            "email":"john@example.com",
+            "gender":"Male",
+            "language":"English",
+            "name":"John",
+            "nation":"Singapore",
+            "phone":"132780456",
+            "twitter":"@john"
+         },
+         "proof":{
+            "type":"ECDSAsecp256r1",
+            "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
+            "signature":"gXKdVyFZEMFWm0wL93av3w1zyOcmH9vPVzKz04ALTVtsA4crXKpgTePipWK8QPSsCnSE4-wVB-H_4dB29yyazw"
+         }
+      },
+      {
+         "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#m77Y9ycreUniRal9",
+         "type":[
+            "BasicProfileCredential",
+            "PhoneCredential",
+            "SelfProclaimedCredential"
+         ],
+         "issuer":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+         "issuanceDate":"2021-01-21T01:49:26Z",
+         "expirationDate":"2025-01-03T06:08:19Z",
+         "credentialSubject":{
+            "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+            "email":"john@example.com",
+            "gender":"Male",
+            "language":"English",
+            "name":"John",
+            "nation":"Singapore",
+            "phone":"132780456",
+            "twitter":"@john"
+         },
+         "proof":{
+            "type":"ECDSAsecp256r1",
+            "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#primary",
+            "signature":"edqzep-Q83SoMnCJ2vkIBj7gPYB4jdcLEhC41r5iCQHKFvCv6oOdrhk-58khTtnN0lgfd_J2WAONd7FvgLLoyw"
+         }
+      }
+   ],
+   "proof":{
+      "type":"ECDSAsecp256r1",
+      "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#primary",
+      "realm":"https://example.com/",
+      "nonce":"873172f58701a9ee686f0630204fee59",
+      "signature":"hF7aRGR5maefdN6n1lrFriywZtmL0vI52wYbKnLwnQ4355AAZPs3etwCLGEnocpSDE6OCcsjmQn7zGN0yHZ_cg"
+   }
 }
 ```
 ## Verifiable Credentials操作
@@ -341,37 +360,42 @@ Verifiable Credential操作和DID操作类似，对应的凭证采用JSON格式�
 
 ```json5
 {
-  "header": {
-    "specification": "elastos/credential/1.0",
-    "operation": "declare"
-  },
-  "payload": "ICAiZG9jIjogewogICAgImlkIjogImRpZDplbGFzdG9zOmljSjR6MkRVTHJIRXpZU3ZqS05KcEt5aHFGRHh2WVY3cE4iLAogICAgInB1YmxpY0tleSI6IFt7CiAgICAgICJpZCI6ICIjbWFzdGVyLWtleSIsCiAgICAgICJwdWJsaWNLZXlCYXNlNTgiOiAiek54b1phWkxkYWNrWlFOTWFzN3NDa1BSSFpzSjNCdGRqRXZNMnk1Z052S0oiCiAgICB9LCB7CiAgICAgICJpZCI6ICIja2V5LTIiLAogICAgICAicHVibGljS2V5QmFzZTU4IjogIjI3M2o4ZlExWlpWTTZVNmQ1WEUzWDhTeVVMdUp3anlZWGJ4Tm9wWFZ1ZnRCZSIKICAgIH0sIHsKICAgICAgImlkIjogIiNyZWNvdmVyeS1rZXkiLAogICAgICAiY29udHJvbGxlciI6ICJkaWQ6ZWxhc3RvczppcDdudERvMm1ldEduVTh3R1A0Rm55S0NVZGJIbTRCUERoIiwKICAgICAgInB1YmxpY0tleUJhc2U1OCI6ICJ6cHB5MzNpMnIzdUMxTFQzUkZjTHFKSlBGcFl1WlBEdUtNZUtaNVRkQXNrTSIKICAgIH1dLAogICAgImF1dGhlbnRpY2F0aW9uIjogWwogICAgICAibWFzdGVyLWtleXMiLAogICAgICAiI2tleS0yIiwKICAgIF0sCiAgICAuLi4KICB9LA",
-  "proof": {
-    "type": "ECDSAsecp256r1",
-    "verificationMethod": "#primary",
-    "signature": "JCAlfEBh...I3NSwg="
-  }
+   "header":{
+      "specification":"elastos/credential/1.0",
+      "operation":"declare"
+   },
+   "payload":"eyJpZCI6ImRpZDplbGFzdG9zOmlXRkFVWWhUYTM1YzFmUGUzaUNKdmloWkh4NnF1dW1ueW0ja3kxNGNjZDdSOXJlbmlhbCIsInR5cGUiOlsiQmFzaWNQcm9maWxlQ3JlZGVudGlhbCIsIlBob25lQ3JlZGVudGlhbCJdLCJpc3N1ZXIiOiJkaWQ6ZWxhc3RvczppcjMxY1paYkJRVUZicDRwTnBNUUFwa0F5Sjlkbm8zZnJCIiwiaXNzdWFuY2VEYXRlIjoiMjAyMS0wMS0yMVQwMTo0OToyNloiLCJleHBpcmF0aW9uRGF0ZSI6IjIwMjUtMDEtMDNUMDY6MDg6MTlaIiwiY3JlZGVudGlhbFN1YmplY3QiOnsiaWQiOiJkaWQ6ZWxhc3RvczppV0ZBVVloVGEzNWMxZlBlM2lDSnZpaFpIeDZxdXVtbnltIiwiZW1haWwiOiJqb2huQGV4YW1wbGUuY29tIiwiZ2VuZGVyIjoiTWFsZSIsImxhbmd1YWdlIjoiRW5nbGlzaCIsIm5hbWUiOiJKb2huIiwibmF0aW9uIjoiU2luZ2Fwb3JlIiwicGhvbmUiOiIxMzI3ODA0NTYiLCJ0d2l0dGVyIjoiQGpvaG4ifSwicHJvb2YiOnsidHlwZSI6IkVDRFNBc2VjcDI1NnIxIiwidmVyaWZpY2F0aW9uTWV0aG9kIjoiZGlkOmVsYXN0b3M6aXIzMWNaWmJCUVVGYnA0cE5wTVFBcGtBeUo5ZG5vM2ZyQiNwcmltYXJ5Iiwic2lnbmF0dXJlIjoiZ1hLZFZ5RlpFTUZXbTB3TDkzYXYzdzF6eU9jbUg5dlBWekt6MDRBTFRWdHNBNGNyWEtwZ1RlUGlwV0s4UVBTc0NuU0U0LXdWQi1IXzRkQjI5eXlhencifX0",
+   "proof":{
+      "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#primary",
+      "signature":"5rptlEAWYtzTbWlHBYORy6Rxoi8FDZ1fIQzYR2WOifKzJi1Hbbik9t-IOMmJQwe3DOPJ4YkKfyDFuSKPRchWUQ"
+   }
 }
 ```
 
 其中payload是以下Verifiable Credential通过Base64URL编码后的结果：
 
 ```json5
-{
-  "id" : "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#email",
-  "type" : [ "BasicProfileCredential", "EmailCredential", "InternetAccountCredential" ],
-  "issuer" : "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
-  "issuanceDate" : "2020-01-03T06:08:20Z",
-  "expirationDate" : "2025-01-03T06:08:20Z",
-  "credentialSubject" : {
-    "id" : "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
-    "email" : "john@example.com"
-  },
-  "proof" : {
-    "type" : "ECDSAsecp256r1",
-    "verificationMethod" : "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
-    "signature" : "uNqJdVuU279eLyaa400nKGxwHTkRZ1bWKiy9Ro-DXwc92rS-qP24dMiLkijfh1hS1YEwCOUXzbRpFXhwg5dv9g"
-  }
+{   
+   "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+   "type":["BasicProfileCredential","PhoneCredential"],
+   "issuer":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
+   "issuanceDate":"2021-01-20T15:38:09Z",
+   "expirationDate":"2025-01-03T06:08:19Z",
+   "credentialSubject":{
+      "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
+      "email":"john@example.com",
+      "gender":"Male",
+      "language":"English",
+      "name":"John",
+      "nation":"Singapore",
+      "phone":"132780456",
+      "twitter":"@john"
+   },
+   "proof":{
+      "type":"ECDSAsecp256r1",
+       "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
+      "signature":"STFyic4eFViVABO41jHl4U6ZsiO146JU7yQH2Ejs9CVMsSjF4BydKhR6TOJntRywsGj8ZWH7VHvPS3NsqST5lw"
+   }
 }
 ```
 
@@ -389,16 +413,15 @@ Verifiable Credential操作和DID操作类似，对应的凭证采用JSON格式�
 
 ```json5
 {
-  "header": {
-    "specification": "elastos/credential/1.0",
-    "operation": "revoke"
-  },
-  "payload": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#email",
-  "proof": {
-    "type": "ECDSAsecp256r1",
-    "verificationMethod": "#primary",
-    "signature": "JCAlfEBh...I3NSwg="
-  }
+   "header":{
+      "specification":"elastos/credential/1.0",
+      "operation":"revoke"
+   },
+   "payload":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
+   "proof":{
+      "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
+      "signature":"ZiNKooXP0wQkzAB3cdhT9kLt_JV2wN8P8bht0Gu8AB9cO_1kmvXRPxXHDPC1mY7NXzNoIeaIsRfmUcHiZjXQFg"
+   }
 }
 ```
 > REF: https://w3c.github.io/vc-imp-guide/
