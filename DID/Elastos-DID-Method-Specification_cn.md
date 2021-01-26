@@ -91,7 +91,7 @@ sub-delims         = "!" / "$" / "&" / "'" / "(" / ")"
 
 ## DID字符串
 
-亦来云DID中的ID字符串支持两种格式：第一种是默认标识符，使用Bitcoin风格Base58编码的ID侧链地址，并且以字母`i`开始，如`icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN`，ID字符串区分大小写；第二种是用户自定义标识符，也具有唯一性。
+亦来云DID中的ID字符串支持两种格式：第一种是默认标识符，使用Bitcoin风格Base58编码的ID侧链地址，并且以字母`i`开始，如`icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN`，ID字符串区分大小写；第二种是用户自定义标识符，也具有唯一性。本文档中支持默认标识符的DID称为标准DID，支持自定义标识符的DID被称为自定义DID。
 
 
 ## DID文档
@@ -127,12 +127,12 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 #### 持有者/Controller（可选）
 
-持有者是一组标准DID，其本身至少具有最基本的认证属性，可代表DID实现签名和认证，可视为DID的被委托者。目前，亦来云仅支持自定义DID包含持有者（标准DID不需要持有者），且持有者必须是标准DID。持有者可更改DID文档，支持DID上链等相关操作。
+持有者是一组标准DID集，即每个持有者是一个独立的标准DID，具备最基本的认证属性，可代表主题DID实现签名和认证操作，亦可被视为主题DID的委托者。亦来云现仅支持自定义DID包含持有者（标准DID不支持持有者）。持有者可更改主题DID文档，支持主题DID上链等相关操作。
 
 持有者的规则是：
 
-- 自定义DID必须包含一个`controller`属性。
-- `controller`属性的值必须是DID字符串或者DID数组。
+- 自定义DID必须且仅包含一个`controller`属性。
+- `controller`必须是标准DID字符串或者标准DID数组。
 
 持有者属性至少包含一个标准DID；多个持有者之间功能相等，无主次无优先。
 
