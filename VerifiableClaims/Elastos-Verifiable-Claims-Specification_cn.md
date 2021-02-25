@@ -232,6 +232,7 @@
    },
    "proof":{
       "type":"ECDSAsecp256r1",
+      "created":"2021-01-21T01:49:26Z",
       "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#primary",
       "signature":"edqzep-Q83SoMnCJ2vkIBj7gPYB4jdcLEhC41r5iCQHKFvCv6oOdrhk-58khTtnN0lgfd_J2WAONd7FvgLLoyw"
    }
@@ -259,6 +260,7 @@
    },
    "proof":{
       "type":"ECDSAsecp256r1",
+      "created":"2021-01-20T15:38:09Z",
        "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
       "signature":"STFyic4eFViVABO41jHl4U6ZsiO146JU7yQH2Ejs9CVMsSjF4BydKhR6TOJntRywsGj8ZWH7VHvPS3NsqST5lw"
    }
@@ -393,6 +395,7 @@ Verifiable Credential操作和DID操作类似，对应的凭证采用JSON格式�
    },
    "proof":{
       "type":"ECDSAsecp256r1",
+      "created":"2021-01-20T15:38:09Z",
        "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
       "signature":"STFyic4eFViVABO41jHl4U6ZsiO146JU7yQH2Ejs9CVMsSjF4BydKhR6TOJntRywsGj8ZWH7VHvPS3NsqST5lw"
    }
