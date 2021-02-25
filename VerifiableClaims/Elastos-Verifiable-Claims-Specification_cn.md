@@ -172,6 +172,7 @@
 `proof`是针对可验证凭证提供的必要的验证方法以及相关证据信息。本规范仅使用[W3C可验证声明规范](https://www.w3.org/TR/verifiable-claims-data-model/#proofs-signatures)中外部证据和嵌入证据两种方式中的嵌入证据方式。凭证必须包含证据属性。证据需要包含以下属性：
 
 - `type`默认是`ECDSAsecp256r1`，可以省略。
+- `created`表明签名创建时间。
 - `verificationMethod`表示证明方法，值是颁发者DID文档中用于签名和验证的公钥引用。
 - `signature`表示签名的值，使用Base64URL编码。
 
@@ -396,7 +397,7 @@ Verifiable Credential操作和DID操作类似，对应的凭证采用JSON格式�
    "proof":{
       "type":"ECDSAsecp256r1",
       "created":"2021-01-20T15:38:09Z",
-       "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
+      "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
       "signature":"STFyic4eFViVABO41jHl4U6ZsiO146JU7yQH2Ejs9CVMsSjF4BydKhR6TOJntRywsGj8ZWH7VHvPS3NsqST5lw"
    }
 }
