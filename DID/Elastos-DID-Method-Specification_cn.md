@@ -324,6 +324,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
       // the cryptographic signature suite that was used to generate the signature
       "type": "ECDSAsecp256r1",
       // the public key identifier that created the signature
+      "created": "2019-01-01T19:20:18Z",
       "verificationMethod": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key",
       "signatureValue": "pYw8XNi1..Cky6Ed="
     }
@@ -350,6 +351,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
       // the cryptographic signature suite that was used to generate the signature
       "type": "ECDSAsecp256r1",
       // the public key identifier that created the signature
+      "created": "2019-01-01T19:20:18Z",
       "verificationMethod": "did:elastos:iY3PF8u1bYMujq6Z4bk2iAnmRFyD1cqbSw#sign-key",
       // the digital signature value
       "signature": "BavEll0...W3JT24="
@@ -789,6 +791,7 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
       // the cryptographic signature suite that was used to generate the signature
       "type": "ECDSAsecp256r1",
       // the public key identifier that created the signature
+      "created": "2019-01-01T19:20:18Z",
       "verificationMethod": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key",
       "signature": "pYw8XNi1..Cky6Ed="
     }
@@ -815,6 +818,7 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
       // the cryptographic signature suite that was used to generate the signature
       "type": "ECDSAsecp256r1",
       // the public key identifier that created the signature
+      "created": "2019-01-01T19:20:18Z",
       "verificationMethod": "did:elastos:iY3PF8u1bYMujq6Z4bk2iAnmRFyD1cqbSw#sign-key",
       // the digital signature value
       "signature": "BavEll0...W3JT24="
@@ -899,6 +903,7 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
             },
             "proof": {
                 "type": "ECDSAsecp256r1",
+                "created": "2020-12-10T07:13:57Z",
                 "verificationMethod": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#primary",
                 "signature": "_nSR6HkkmFnHTe2kOb2atk_EMLX424Js5ZKX5quTeV4M-EcXPiEXHtisSgXhGF6_7pBRVOGGDl-WL8pIICNRBA"
             }
