@@ -91,7 +91,7 @@ sub-delims         = "!" / "$" / "&" / "'" / "(" / ")"
 
 ## DID字符串
 
-亦来云DID中的ID字符串支持两种格式：第一种是默认标识符，使用Bitcoin风格Base58编码的ID侧链地址，并且以字母`i`开始，如`icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN`，ID字符串区分大小写；第二种是用户自定义标识符，也具有唯一性。本文档中支持默认标识符的DID称为标准DID，支持自定义标识符的DID被称为自定义DID。
+亦来云DID中的ID字符串支持两种格式：第一种是默认标识符，使用Bitcoin风格Base58编码的ID侧链地址，并且以字母`i`开始，如`icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN`，ID字符串区分大小写；第二种是用户自定义标识符，也具有唯一性。本文档中支持默认标识符的DID称为普通DID（primitive DID），支持自定义标识符的DID被称为自定义DID（customized DID）。
 
 
 ## DID文档
@@ -112,7 +112,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 例如：
 
-标准DID：
+普通DID：
 ```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN"
@@ -127,14 +127,14 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 #### 持有者/Controller（可选）
 
-持有者是一组标准DID集，即每个持有者是一个独立的标准DID，具备最基本的认证属性，可代表主题DID实现签名和认证操作，亦可被视为主题DID的委托者。亦来云现仅支持自定义DID包含持有者（标准DID不支持持有者）。持有者可更改主题DID文档，支持主题DID上链等相关操作。
+持有者是一组普通DID集，即每个持有者是一个独立的普通DID，具备最基本的认证属性，可代表主题DID实现签名和认证操作，亦可被视为主题DID的委托者。亦来云现仅支持自定义DID包含持有者（普通DID不支持持有者）。持有者可更改主题DID文档，支持主题DID上链等相关操作。
 
 持有者的规则是：
 
 - 自定义DID必须且仅包含一个`controller`属性。
-- `controller`必须是标准DID字符串或者标准DID数组。
+- `controller`必须是普通DID字符串或者普通DID数组。
 
-持有者属性至少包含一个标准DID；多个持有者之间功能相等，无主次无优先。
+持有者属性至少包含一个普通DID；多个持有者之间功能相等，无主次无优先。
 
 例如：
 
@@ -192,7 +192,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 公钥的规则是：
 
-- 标准DID文档必须包含一个`publicKey`属性；自定义DID文档可以不包含该属性。
+- 普通DID文档必须包含一个`publicKey`属性；自定义DID文档可以不包含该属性。
 - `publicKey`属性的值必须是公钥数组。
 - 每个公钥必须包含`id`和`type`属性。 公钥数组不应该包含具有相同`id`和具有不同格式的不同值属性的重复条目。
 - `id`属性值由该DID标识符和一个自定义的URI片段构成，如`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#master-key`，当DID标识符和文档subject相同的情况下，出于保持数据紧凑的目的，可以省略前面的DID标识符，而仅使用URI片段部分，如`#master-key`。
@@ -200,7 +200,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 - 每个公钥可以包含一个`controller`属性，表示相应私钥控制者的DID；默认为所在文档的DID，这种情况可省略该属性。
 - 每个公钥必须包含一个`publicKeyBase58` 属性，用于存放Base58编码的公钥。
 
-亦来云标准DID文档中至少需要包含一个主公钥（default key）。
+亦来云普通DID文档中至少需要包含一个主公钥（default key）。
 
 例如：
 
@@ -231,10 +231,10 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 身份验证的规则是：
 
-- 标准DID文档必须包含且最多一个`authentication`属性；自定义DID文档可以不包含该属性。
+- 普通DID文档必须包含且最多一个`authentication`属性；自定义DID文档可以不包含该属性。
 - `authentication`属性的值是一个验证方法数组，即可用于身份验证的公钥数组。
 - 可以嵌入或引用验证方法。 在引用时是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#primary`和`#primary`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥/Public Keys)一致。
-- 标准DID文档的authentication数组至少有一个公钥，即为主公钥。
+- 普通DID文档的authentication数组至少有一个公钥，即为主公钥。
 
 例如：
 
@@ -266,7 +266,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 授权和委托的规则是：
 
-- 标准DID文档可以包含最多一个`authorization`属性；自定义DID文档不可包含该属性，其由持有者来实现该功能。
+- 普通DID文档可以包含最多一个`authorization`属性；自定义DID文档不可包含该属性，其由持有者来实现该功能。
 - `authorization`属性的值应该是一个验证方法数组，即可用于委托的公钥数组。
 - 可以嵌入或引用每种验证方法。 在引用时可以是一个完整的公钥URI，或者仅仅是片段部分，如：`did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#recovery-key`和`#recovery-key`相同，都是同一个公钥的引用。如果使用嵌入的公钥，公钥的书写规则和[公钥属性](#公钥public-keys)一致。
 
@@ -366,9 +366,10 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 服务端点的规则是：
 - DID文档可以包含最多一个`service`属性。
 - `service`属性的值应该是服务端点的数组。
-- 每个服务端点必须包含`id` ， `type`和`serviceEndpoint`属性，并且可以包含其他应用自定义的属性。
+- 每个服务端点必须包含`id` ， `type`和`serviceEndpoint`属性，同时支持一个应用自定义的属性`description`。
 - 服务端点协议应该以开放标准规范发布。
 - `serviceEndpoint`属性的值必须是符合[RFC3986](https://tools.ietf.org/html/rfc3986)的有效URI，并根据[RFC3986第6节](https://tools.ietf.org/html/rfc3986#section-6)中的规则进行规范化。
+- `description`属性的值为JSON对象值。
 
 例如：
 
@@ -387,7 +388,11 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
   }, {
     "id": "#carrier",
     "type": "CarrierAddress",
-    "serviceEndpoint": "carrier://X2tDd1ZTErwnHNot8pTdhp7C7Y9FxMPGD8ppiasUT4UsHH2BpF1d"
+    "serviceEndpoint": "carrier://X2tDd1ZTErwnHNot8pTdhp7C7Y9FxMPGD8ppiasUT4UsHH2BpF1d"，
+    "description": {
+      "country" : "Canada",
+      "app" : "Feeds"
+    }
   }],
   ...
 }
@@ -403,7 +408,7 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 
 #### 证据/Proof
 
-DID文档的Proof属性是用来对DID文档的完整性提供加密证明的信息。为了保证DID文档的可信以及完整性，Proof中需要包含针对该DID文档的签名，从而保证文档的完整性，以及防止中间人攻击。标准DID文档的签名必须使用DID主题对应的密钥生成，自定义DID文档的签名根据多重签名规则由持有者使用主公钥签名完成。
+DID文档的Proof属性是用来对DID文档的完整性提供加密证明的信息。为了保证DID文档的可信以及完整性，Proof中需要包含针对该DID文档的签名，从而保证文档的完整性，以及防止中间人攻击。普通DID文档的签名必须使用DID主题对应的密钥生成，自定义DID文档的签名根据多重签名规则由持有者使用主公钥签名完成。
 
 Proof的规则是：
 
@@ -415,7 +420,7 @@ Proof的规则是：
 - `creator`表示验证签名的密钥引用。
 - `signatureValue`表示签名的值，使用Base64URL编码。
 
-例如，标准DID文档：
+例如，普通DID文档：
 ```json5
 {
   "id": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN",
@@ -485,7 +490,7 @@ Proof的规则是：
 
 ## DID操作
 
-亦来云DID文档存储是基于ID侧链的，所以相关的操作都需要在支持ID侧链的客户端中操作。标准DID需要使用对应DID主题的认证公钥给自己发起交易来实现；自定义DID可以使用对应DID主题的公钥或者持有者的认证公钥来发起交易。但是标准DID停用例外，允许DID主题授权和委托的DID公钥发起相关操作。
+亦来云DID文档存储是基于ID侧链的，所以相关的操作都需要在支持ID侧链的客户端中操作。普通DID需要使用对应DID主题的认证公钥给自己发起交易来实现；自定义DID可以使用对应DID主题的公钥或者持有者的认证公钥来发起交易。但是普通DID停用例外，允许DID主题授权和委托的DID公钥发起相关操作。
 
 DID操作和对应的文档采用JSON格式保存在交易的payload中，DID操作JSON文档的属性定义如下：
 
@@ -652,9 +657,9 @@ DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID�
 
 ### 停用/Deactivate DID
 
-DID所有者或者持有者可以主动停用DID，比如标准DID所有者或者自定义DID持有者不再使用该DID，或者认为DID对应私钥泄漏，都可以选择停用DID。
+DID所有者或者持有者可以主动停用DID，比如普通DID所有者或者自定义DID持有者不再使用该DID，或者认为DID对应私钥泄漏，都可以选择停用DID。
 
-如果标准DID所有者的私钥遗失，那么他将失去该DID的控制权，无法直接对DID进行任何更新操作，包括停用。若标准DID文档中包含了授权和委托，那么委托的可信第三方可以向该DID对应的地址发起停用交易，用来代替DID持有者停用DID，从而避免DID被恶意使用。自定义DID授权和委托持有者停用DID。
+如果普通DID所有者的私钥遗失，那么他将失去该DID的控制权，无法直接对DID进行任何更新操作，包括停用。若普通DID文档中包含了授权和委托，那么委托的可信第三方可以向该DID对应的地址发起停用交易，用来代替DID持有者停用DID，从而避免DID被恶意使用。自定义DID授权和委托持有者停用DID。
 
 停用DID的规则是：
 
@@ -710,7 +715,7 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
 
 ## 示例
 
-### 一个最简单的标准DID文档
+### 一个最简单的普通DID文档
 
 ```json5
 {
@@ -729,7 +734,7 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
 - 公钥`#key`可以用于认证DID主题持有者身份。
 - 有效期为5年。
 
-### 一个复杂/冗长的标准DID文档
+### 一个复杂/冗长的普通DID文档
 
 ```json5
 {
