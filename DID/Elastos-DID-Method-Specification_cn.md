@@ -603,7 +603,7 @@ DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID�
 - `type`默认是`created`，`ECDSAsecp256r1`，可以省略。
 - `created`表示签名创建时间。
 - `creator`表示持有者主密钥引用。
-- `signatureValue`表示签名的值，使用Base64URL编码。
+- `signature`表示签名的值，使用Base64URL编码。
 
 例如：
 
@@ -616,17 +616,17 @@ DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID�
 		 "type":"ECDSAsecp256r1",
 		 "created":"2021-01-20T07:16:38Z",
 		 "verificationMethod":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#primary",
-		 "signatureValue":"02A7qf9mth6qjtlCC01LNrQK9pzxLwF16cOSIVU-YOWzgA9OaVwpPlDvzW68jKRdjLNg758ha69svrb_SrAhrA"
+		 "signature":"02A7qf9mth6qjtlCC01LNrQK9pzxLwF16cOSIVU-YOWzgA9OaVwpPlDvzW68jKRdjLNg758ha69svrb_SrAhrA"
 	  },{
 		 "type":"ECDSAsecp256r1",
 		 "created":"2021-01-20T07:16:38Z",
 		 "verificationMethod":"did:elastos:ijSM3fffVzAtAWM4DSypiFBY2mZSmN7JPv#primary",
-		 "signatureValue":"1lR1zIwX7NAVVv1k-5vdGArl5XoQBAo-t91Km0ZSrnozuigulfel_ei_1PbpwvRwQvvZRfRtCn7fUNeGw2iKfg"
+		 "signature":"1lR1zIwX7NAVVv1k-5vdGArl5XoQBAo-t91Km0ZSrnozuigulfel_ei_1PbpwvRwQvvZRfRtCn7fUNeGw2iKfg"
 	 }, {
 		 "type":"ECDSAsecp256r1",
 		 "created":"2021-01-20T07:16:38Z",
 		 "verificationMethod":"did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB#primary",
-		 "signatureValue":"TLBseQ6n5Qobg48vTWM03hS_PZv3nghRzPJMsGFqmueDcwf_YFlXBykKy8RLElE1F64crU2x04tinQWTWdb92A"
+		 "signature":"TLBseQ6n5Qobg48vTWM03hS_PZv3nghRzPJMsGFqmueDcwf_YFlXBykKy8RLElE1F64crU2x04tinQWTWdb92A"
 	}]
 }
 ```
@@ -725,7 +725,14 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
   "publicKey": [{
     "id": "#key",
     "publicKeyBase58": "zNxoZaZLdackZQNMas7sCkPRHZsJ3BtdjEvM2y5gNvKJ"
-  }]
+  }],
+  "authentication": ["#key"],
+  "proof": { 
+     "type": "ECDSAsecp256r1",
+     "created": "2020-01-01T19:23:24Z",
+     "creator": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#key",
+     "signatureValue": "QNB13Y7Q9...1tzjn4w" 
+   }
 }
 ```
 
@@ -824,7 +831,6 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
       "signature": "BavEll0...W3JT24="
     }
   }],
-
   "service": [{
     "id": "#openid",
     "type": "OpenIdConnectVersion1.0Service",
@@ -839,7 +845,13 @@ DID的操作是基于区块链上的交易来完成，以交易的安全来支�
     "serviceEndpoint": "carrier://X2tDd1ZTErwnHNot8pTdhp7C7Y9FxMPGD8ppiasUT4UsHH2BpF1d"
   }],
 
-  "expires": "2020-02-10T17:00:00Z"
+  "expires": "2020-02-10T17:00:00Z",
+  "proof": { 
+     "type": "ECDSAsecp256r1",
+     "created": "2020-01-01T19:23:24Z",
+     "creator": "did:elastos:icJ4z2DULrHEzYSvjKNJpKyhqFDxvYV7pN#primary",
+     "signatureValue": "QNB13Y7Q9...1tzjn4w" 
+   }
 }
 ```
 
