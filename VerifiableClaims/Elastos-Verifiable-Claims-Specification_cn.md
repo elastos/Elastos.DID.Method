@@ -1,4 +1,4 @@
-﻿# 亦来云可验证声明规范 v0.3
+﻿# 亦来云可验证声明规范 v2.0
 
 区块链驱动的智能万维网
 
@@ -10,7 +10,7 @@
 
 **版本**
 
-0.2
+2.0
 
 **内容说明**
 
@@ -20,11 +20,7 @@
 
 此文档著作权归亦来云Core团队所有，保留所有权利。
 
-----
 
-[TOC]
-
-----
 
 ## 概述
 
@@ -184,17 +180,25 @@
 
 可验证表达可以包含的属性定义如下。
 
+#### 标识/id
+
+`id` 可选，用来标记可验证表达。
+
 #### 类型/type
 
-`type`表示目标数据的类型是一个可验证表达，值为`VerifiablePresentation`。
+`type` 必选，表示目标数据的类型是可验证表达，值可为单个字符串或者是字符串数组。
+
+#### 持有者/holder
+
+`holder` 必选，表示可验证表达的创建者（也为持有者）。
 
 #### 创建时间/created(可选)
 
-`created`是该可验证表达创建的时间，属性的值必须是[RFC3339](https://tools.ietf.org/html/rfc3339)组合日期和时间字符串的字符串值，并标准化为UTC时间，尾随"Z"。
+`created` 必选，是该可验证表达创建的时间，属性的值必须是[RFC3339](https://tools.ietf.org/html/rfc3339)组合日期和时间字符串的字符串值，并标准化为UTC时间，尾随"Z"。
 
 #### 可验证凭证/verifiableCredential
 
-`verifiableCredential`是一个可验证凭证的数组，可以根据应用场景或者角色需求由持有者提供的一个凭证的子集。
+`verifiableCredential`是一个可验证凭证的数组，可以根据应用场景或者角色需求由持有者提供的一个凭证的子集。可验证表达支持无凭证集。
 
 #### 证明/proof
 
@@ -273,6 +277,7 @@
 ```json5
 {
    "type":"VerifiablePresentation",
+   "holder": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym",
    "created":"2021-01-21T01:57:35Z",
    "verifiableCredential":[
       {
