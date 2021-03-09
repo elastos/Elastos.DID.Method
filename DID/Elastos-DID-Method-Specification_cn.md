@@ -364,10 +364,9 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
 服务端点的规则是：
 - DID文档可以包含最多一个`service`属性。
 - `service`属性的值应该是服务端点的数组。
-- 每个服务端点必须包含`id` ， `type`和`serviceEndpoint`属性，同时支持一个应用自定义的属性`description`。
+- 每个服务端点必须包含`id` ， `type`和`serviceEndpoint`属性，同时支持应用自定义属性。
 - 服务端点协议应该以开放标准规范发布。
 - `serviceEndpoint`属性的值必须是符合[RFC3986](https://tools.ietf.org/html/rfc3986)的有效URI，并根据[RFC3986第6节](https://tools.ietf.org/html/rfc3986#section-6)中的规则进行规范化。
-- `description`属性的值为JSON对象值。
 
 例如：
 
@@ -387,9 +386,10 @@ DID文档**必须**是符合[RFC8259](https://tools.ietf.org/html/rfc8259)的单
     "id": "#carrier",
     "type": "CarrierAddress",
     "serviceEndpoint": "carrier://X2tDd1ZTErwnHNot8pTdhp7C7Y9FxMPGD8ppiasUT4UsHH2BpF1d"，
-    "description": {
-      "country" : "Canada",
-      "app" : "Feeds"
+    "description": "My public social inbox", // extra property
+    "spamCost": { // extra property
+      "amount": "0.50", 
+      "currency": "USD" 
     }
   }],
   ...
