@@ -595,7 +595,7 @@ DID只有DID本身或者持有者具有更新DID的权力。对于自定义DID�
 - 必须包含`to`属性，表示转移凭证的接收者，必须为更改后的持有者之一，且更改后的文档包含该接收者的签名。
 - 必须包含`txid`属性，值是前一个DID文档操作的交易ID。
 - 必须包含`proof`属性，值是单一签名或者多个签名的数组。
-- 每个proof必须包含`creator`和`signatureValue`属性。
+- 每个proof必须包含`creator`和`signature`属性。
 - `type`默认是`created`，`ECDSAsecp256r1`，可以省略。
 - `created`表示签名创建时间。
 - `creator`表示持有者主密钥引用。
