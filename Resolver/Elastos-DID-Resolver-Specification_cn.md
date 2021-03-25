@@ -118,11 +118,11 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ```json5
 {
-    "method": "resolvedid",
-    "params":{
+    "method": "did_resolveDID",
+    "params":[{
         "did": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
         "all": false
-    },
+    }],
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
 ```
@@ -162,11 +162,11 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ```json5
 {
-    "method": "resolvedid",
-    "params":{
+    "method": "did_resolveDID",
+    "params": [{
         "did":"iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
         "all": false
-    },
+    }],
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
 ```
@@ -220,11 +220,11 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ```json5
 {
-    "method": "resolvedid",
-    "params":{
+    "method": "did_resolveDID",
+    "params": [{
         "did": "iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
         "all": false
-    },
+    }],
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
 ```
@@ -248,11 +248,11 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ```json5
 {
-    "method": "resolvedid",
-    "params":{
+    "method": "did_resolveDID",
+    "params":[{
         "did": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
         "all": true
-    },
+    }],
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
 ```
@@ -324,11 +324,11 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ```json5
 {
-    "method": "resolvedid",
-    "params":{
+    "method": "did_resolveDID",
+    "params":[{
         "did": "iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
         "all": false
-    },
+    }],
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
 ```
@@ -441,10 +441,10 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 
 ```json5
 {
-    "method": "resolvecredential",
-    "params":{
-        "id": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
-    },
+    "method": "did_resolveCredential",
+    "params":[{
+        "id": "did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial"
+    }],
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
 ```
@@ -484,12 +484,11 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 
 ```json5
 {
-    "method": "resolvecredential",
-    "params":{
+    "method": "did_resolveCredential",
+    "params":[{
         "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
-        "issuer": "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
-
-    },
+        "issuer": "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB"
+    }],
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
 ```
@@ -545,12 +544,11 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 
 ```json5
 {
-    "method": "resolvecredential",
-    "params":{
+    "method": "did_resolveCredential",
+    "params":[{
         "id":"did:elastos:iWFAUYhTa35c1fPe3iCJvihZHx6quumnym#ky14ccd7R9renial",
-        "issuer": "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB",
-
-    },
+        "issuer": "did:elastos:ir31cZZbBQUFbp4pNpMQApkAyJ9dno3frB"
+    }],
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
 ```
@@ -593,10 +591,10 @@ resolve credential根据[resolve credential](#credential-resolve-request)请求�
 
 ```json5
 {
-    "method": "resolvecredential",
-    "params":{
-        "id":"did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1",
-    },
+    "method": "did_resolveCredential",
+    "params":[{
+        "id":"did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4#cred-1"
+    }],
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
 ```
@@ -684,12 +682,12 @@ JSON-RPC的默认响应属性，字符串值，指定JSON-RPC协议的版本。 
 
 ```json5
 {
-    "method": "listcredentials",
-    "params":{
+    "method": "did_listCredentials",
+    "params":[{
         "did": "did:elastos:iVPadJq56wSRDvtD5HKvCPNryHMk3qVSU4",
         "skip": 2,
         "limit" : 100
-    },
+    }],
     "id": "8555cbd1afbf3b8fd8748464ee949574"
 }
 ```
