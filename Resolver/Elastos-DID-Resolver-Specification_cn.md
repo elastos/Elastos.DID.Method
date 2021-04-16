@@ -47,7 +47,7 @@ DID Resolve 是用来解析特定DID文档的方法。
 
 - all
 
-  是否获取该DID的所有历史操作。Boolean类型，true或者false。
+  可选，是否获取该DID的所有历史操作，Boolean类型，true或者false。若无，则默认为false。
 
 #### id
 
